@@ -18,20 +18,19 @@ exports.handler = async function(event) {
   try {
     const { prompt } = JSON.parse(event.body);
 
-    // Determine how many days are requested so we can enforce completeness
+    // Detect trip length and inject a concise-but-complete instruction
     const tenPlusMatch = prompt.match(/10\+?\s*days?/i) || prompt.match(/ten.*days?/i);
     const sevenMatch   = prompt.match(/7\s*days?/i)     || prompt.match(/seven.*days?/i);
     const fiveMatch    = prompt.match(/5\s*days?/i)     || prompt.match(/five.*days?/i);
 
-    let dayCount = 3; // default
+    let dayCount = 3;
     if (tenPlusMatch) dayCount = 10;
     else if (sevenMatch) dayCount = 7;
     else if (fiveMatch) dayCount = 5;
 
-    // Inject a hard instruction into the prompt to prevent early truncation
     const enforcedPrompt = `${prompt}
 
-CRITICAL INSTRUCTION: You MUST write a complete day-by-day itinerary covering ALL ${dayCount} days. Do not stop early. Do not summarise the remaining days. Every single day from Day 1 to Day ${dayCount} must have its own full section with specific Lombok place names, activities, accommodation suggestion, and a meal recommendation. If you reach Day ${dayCount} and have covered all days completely, you may then add the practical tips and ecosystem card sections. Stopping before Day ${dayCount} is not acceptable.`;
+IMPORTANT: You must cover ALL ${dayCount} days — Day 1 through Day ${dayCount}. Be concise: 3-4 sentences per day maximum. Every day must be included — do not skip or summarise remaining days. After Day ${dayCount}, add a short practical tips section (4 bullet points max) and the ecosystem cards. Keep the entire response under 1800 tokens.`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -42,7 +41,7 @@ CRITICAL INSTRUCTION: You MUST write a complete day-by-day itinerary covering AL
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 4000,
+        max_tokens: 2000,
         messages: [{ role: 'user', content: enforcedPrompt }]
       })
     });
