@@ -18,6 +18,21 @@ exports.handler = async function(event) {
   try {
     const { prompt } = JSON.parse(event.body);
 
+    // Determine how many days are requested so we can enforce completeness
+    const tenPlusMatch = prompt.match(/10\+?\s*days?/i) || prompt.match(/ten.*days?/i);
+    const sevenMatch   = prompt.match(/7\s*days?/i)     || prompt.match(/seven.*days?/i);
+    const fiveMatch    = prompt.match(/5\s*days?/i)     || prompt.match(/five.*days?/i);
+
+    let dayCount = 3; // default
+    if (tenPlusMatch) dayCount = 10;
+    else if (sevenMatch) dayCount = 7;
+    else if (fiveMatch) dayCount = 5;
+
+    // Inject a hard instruction into the prompt to prevent early truncation
+    const enforcedPrompt = `${prompt}
+
+CRITICAL INSTRUCTION: You MUST write a complete day-by-day itinerary covering ALL ${dayCount} days. Do not stop early. Do not summarise the remaining days. Every single day from Day 1 to Day ${dayCount} must have its own full section with specific Lombok place names, activities, accommodation suggestion, and a meal recommendation. If you reach Day ${dayCount} and have covered all days completely, you may then add the practical tips and ecosystem card sections. Stopping before Day ${dayCount} is not acceptable.`;
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -27,8 +42,8 @@ exports.handler = async function(event) {
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: enforcedPrompt }]
       })
     });
 
