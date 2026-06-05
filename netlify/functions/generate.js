@@ -38,7 +38,7 @@ KUTA LOMBOK (main hub of South Lombok)
 - Restaurants and cafes are spread around town, approximately 2 minutes from the beach. There are NO beachside restaurants in Kuta — do not describe dining on the beach in Kuta.
 - Main scooter hire location for exploring the south coast
 - Plenty of spas and massage studios throughout town
-- BEST BEACHES CLOSE TO KUTA: Tanjung Aan (10 mins), Mawun (20-25 mins), Gerupuk (15 mins), and Kuta beach itself
+- BEST BEACHES CLOSE TO KUTA: Tanjung Aan (10 mins — closer than Gerupuk), Gerupuk (15 mins), Mawun (20-25 mins), and Kuta beach itself. Tanjung Aan is the closest of these beaches to Kuta town.
 - IMPORTANT: You CANNOT get a boat to the Gili Islands from Kuta. Do not suggest this ever.
 
 TANJUNG AAN & BUKIT MERESE
@@ -50,15 +50,15 @@ TANJUNG AAN & BUKIT MERESE
 
 MAWUN BEACH
 - Approximately 20-25 minutes from Kuta Lombok
-- Beautiful, quieter beach — one of the best on the island
+- Beautiful bay framed by two headlands — one of the best on the island. Do NOT describe Mawun as having cliffs or clifftop views — it has two gentle headlands.
 - No accommodation — day trip only
 - A couple of warungs with deck chairs and umbrellas
 
 GERUPUK
 - Approximately 15 minutes from Kuta Lombok
 - Small fishing village, popular surf spot with multiple breaks
+- Surf camps and warungs only — NO beach clubs in Gerupuk
 - Boat out to the breaks from the village
-- Budget guesthouses and surf camps
 - Popular with experienced surfers
 
 EKAS (surf)
