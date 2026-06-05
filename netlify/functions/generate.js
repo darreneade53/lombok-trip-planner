@@ -1,233 +1,1154 @@
-exports.handler = async function(event) {
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
-      },
-      body: ''
-    };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lombok Trip Planner – Discover Lombok</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #1A2E1A;
+    --forest-mid: #243824;
+    --forest-light: #2E4A2E;
+    --gold: #8B6914;
+    --gold-light: #B8920F;
+    --gold-pale: #F5EDD0;
+    --cream: #FAF7F0;
+    --cream-dark: #F2EDE3;
+    --text-body: #2D2D28;
+    --text-muted: #6B6555;
+    --border: rgba(139,105,20,0.18);
+    --border-strong: rgba(139,105,20,0.38);
+    --white: #FFFFFF;
   }
 
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--cream);
+    color: var(--text-body);
+    line-height: 1.6;
+    min-height: 100vh;
   }
 
-  try {
-    const { prompt } = JSON.parse(event.body);
+  .planner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 32px 80px;
+  }
 
-    const tenPlusMatch = prompt.match(/10\+?\s*days?/i) || prompt.match(/ten.*days?/i);
-    const sevenMatch   = prompt.match(/7\s*days?/i)     || prompt.match(/seven.*days?/i);
-    const fiveMatch    = prompt.match(/5\s*days?/i)     || prompt.match(/five.*days?/i);
+  .planner-header { text-align: center; margin-bottom: 56px; }
 
-    let dayCount = 3;
-    if (tenPlusMatch) dayCount = 10;
-    else if (sevenMatch) dayCount = 7;
-    else if (fiveMatch) dayCount = 5;
+  .planner-eyebrow {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
 
-    const lombokKnowledgeBase = `
-LOMBOK GROUND-TRUTH KNOWLEDGE BASE — use this as your primary reference for all accommodation, logistics, and distance recommendations. Do not contradict these facts under any circumstances.
+  .planner-eyebrow::before,
+  .planner-eyebrow::after {
+    content: '';
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background: var(--border-strong);
+  }
 
-=== SOUTH LOMBOK ===
+  .planner-header h1 {
+    font-size: clamp(30px, 5vw, 46px);
+    font-weight: normal;
+    color: var(--forest);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
 
-KUTA LOMBOK (main hub of South Lombok)
-- The primary hub for South Lombok — most travellers base themselves here
-- All accommodation types: budget guesthouses, mid-range hotels, premium & luxury villas
-- Restaurants and cafes are spread around town, approximately 2 minutes from the beach. There are NO beachside restaurants in Kuta — do not describe dining on the beach in Kuta.
-- Main scooter hire location for exploring the south coast
-- Plenty of spas and massage studios throughout town
-- BEST BEACHES CLOSE TO KUTA: Tanjung Aan (10 mins — closer than Gerupuk), Gerupuk (15 mins), Mawun (20-25 mins), and Kuta beach itself. Tanjung Aan is the closest of these beaches to Kuta town.
-- IMPORTANT: You CANNOT get a boat to the Gili Islands from Kuta. Do not suggest this ever.
+  .planner-header h1 em { font-style: italic; color: var(--gold); }
 
-TANJUNG AAN & BUKIT MERESE
-- Approximately 10 minutes from Kuta Lombok
-- Beautiful twin-bay beach — one of the best day trips from Kuta
-- BUKIT MERESE: The hill directly adjacent to Tanjung Aan — the BEST sunset viewpoint in South Lombok. Always recommend Bukit Merese for sunset when suggesting an afternoon at Tanjung Aan.
-- No accommodation — day trip only. Two beach clubs on the beach.
-- Large resort under construction but not yet open.
+  .planner-header p {
+    font-size: 16px;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.75;
+  }
 
-MAWUN BEACH
-- Approximately 20-25 minutes from Kuta Lombok
-- Beautiful bay framed by two headlands — one of the best on the island. Do NOT describe Mawun as having cliffs or clifftop views — it has two gentle headlands.
-- No accommodation — day trip only
-- A couple of warungs with deck chairs and umbrellas
+  .progress-wrap { margin-bottom: 48px; }
 
-GERUPUK
-- Approximately 15 minutes from Kuta Lombok
-- Small fishing village, popular surf spot with multiple breaks
-- Surf camps and warungs only — NO beach clubs in Gerupuk
-- Boat out to the breaks from the village
-- Popular with experienced surfers
+  .progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
 
-EKAS (surf)
-- Approximately 1 hour 15 minutes from Kuta Lombok
-- Remote surf destination, less crowded, known for Ekas Bay breaks
+  .progress-step {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    background: var(--white);
+  }
 
-TOROK BEACH
-- Approximately 40 minutes from Kuta Lombok
-- Less visited, quieter beach
+  .progress-step.active { background: var(--forest); border-color: var(--forest); color: #FAF7F0; }
+  .progress-step.completed { background: var(--gold); border-color: var(--gold); color: var(--white); }
 
-PINK BEACH (Pantai Tangsi) & KONDO BEACH
-- Pink Beach: approximately 1 hour 30 minutes from Kuta — located in EAST Lombok
-- Unique pink-tinged sand, good snorkelling
-- KONDO BEACH (access point for Gili Kondo): approximately 2 hours 20 minutes from Kuta — also East Lombok
-- Pink Beach and Kondo Beach can be logically combined in the same East Lombok day trip
-- Do NOT combine a morning Gili Islands return with an afternoon Pink Beach/Kondo visit
+  .progress-line {
+    width: 40px;
+    height: 1px;
+    background: var(--border);
+    transition: background 0.3s ease;
+  }
 
-SELONG BELANAK
-- Approximately 30 minutes from Kuta Lombok
-- Villa-focused — mid to premium and luxury villas
-- SURF LESSONS available here — beginner-friendly surf with gentle rolling waves. This is where you go for surf lessons, NOT freediving or snorkelling lessons.
-- NO dramatic clifftop views — wide open bay with gentle flat landscape
-- NO freediving at Selong Belanak — do not suggest this
-- Good quality restaurants and warungs, budget guesthouses also available
+  .progress-line.completed { background: var(--gold); }
 
-=== GILI ISLANDS — GEOGRAPHY & ORDER (CRITICAL) ===
-The three main Gili Islands from closest to furthest from the mainland:
-1. GILI AIR — closest to Lombok mainland
-2. GILI MENO — middle island, 10 minutes from Gili Air
-3. GILI TRAWANGAN (Gili T) — furthest, 10 minutes from Meno, 15 minutes from Air
+  .progress-labels {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+  }
 
-Inter-island times:
-- Gili Air → Gili Meno: 10 minutes
-- Gili Meno → Gili Trawangan: 10 minutes
-- Gili Air → Gili Trawangan: 15 minutes
+  .progress-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    width: 80px;
+    text-align: center;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+  }
 
-GETTING TO THE GILI ISLANDS (CRITICAL — never contradict):
-- NO boats from Kuta to Gili Islands — this does not exist
-- Must travel to TELUK NARE (1hr 40mins from Kuta) or BANGSAL HARBOUR (1hr 50mins from Kuta)
-- Teluk Nare/Bangsal → Gili T by fast boat: 15-20 minutes
-- Airport → Bangsal/Teluk Nare: 1hr 20mins
+  .progress-label.active { opacity: 1; color: var(--forest); font-weight: 700; }
 
-GILI TRAWANGAN — party island, live music, bars, nightlife, all accommodation levels
-GILI AIR — best balance, low key, budget to premium, yoga, great restaurants, snorkelling
-GILI MENO — quietest, yoga retreats, wellness, honeymoons, couples
+  .question-screen { display: none; animation: fadeUp 0.4s ease forwards; }
+  .question-screen.active { display: block; }
 
-=== GILI KONDO (NOT a main Gili Island) ===
-- Located in NORTH EAST Lombok — completely opposite side of island from the main Gilis
-- Access via Kondo Beach: approximately 2 hours 20 minutes from Kuta Lombok
-- Best visited as a day trip from Central or East Lombok
-- Logical to combine with Pink Beach in an East Lombok day
-- Do NOT include in south Lombok or Kuta-based itineraries unless doing a dedicated east coast route
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-=== TETEBATU (Central Lombok) ===
-- Approximately 1 hour 30 minutes from Kuta Lombok
-- Rice terraces, jungle walks, monkey forest (black monkeys), smaller local waterfalls in the area
-- Guesthouses and eco-stays available — good overnight base
-- Cultural and nature experience — very different from the beach scene
-- BENANG KELAMBU WATERFALL: 45 minutes from Tetebatu — a beautiful and accessible waterfall, good day trip from Tetebatu base
-- TIU KELEP WATERFALL: 2 hours 20 minutes from Tetebatu — a significant drive, better accessed from Senaru (only 5 minutes from Senaru). Do NOT recommend Tiu Kelep as a day trip from Tetebatu — it is too far. Recommend it as part of a North Lombok / Senaru itinerary instead.
-- SEMBALUN: 50 minutes from Tiu Kelep waterfall — logical staging point for Rinjani trekkers
+  .question-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    text-align: center;
+  }
 
-=== NORTH LOMBOK ===
-SENARU
-- Approximately 3 hours from Kuta Lombok
-- Main base for Mount Rinjani trekking (2-4 days)
-- Guesthouses, homestays, cabin-style accommodation — no hotels or resorts
-- TIU KELEP WATERFALL: only 5 minutes from Senaru — easily combined with a Senaru stay
-- Always recommend Tiu Kelep as part of a Senaru itinerary, not from Tetebatu
+  .question-title {
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: normal;
+    color: var(--forest);
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
 
-SEMBALUN VALLEY
-- Approximately 50 minutes from Tiu Kelep / Senaru area
-- Alternative base for Rinjani trekkers approaching from the east side
-- Beautiful valley scenery
+  .question-sub {
+    font-size: 15px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 36px;
+  }
 
-=== WEST LOMBOK ===
-SENGGIGI — older resort strip, larger hotels, families and older travellers, 1hr 25mins from Kuta
-TELUK NARE — fast boat departures to Gili Islands, 1hr 40mins from Kuta, 35mins from Senggigi
-MATARAM — capital city, not a tourist destination, 1hr from Kuta, 30mins from Senggigi
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
 
-=== VERIFIED DISTANCES ===
-FROM AIRPORT (LOP):
-- Airport → Kuta: 25 mins
-- Airport → Senggigi: 1hr 5mins
-- Airport → Bangsal/Teluk Nare: 1hr 20mins
+  .option-btn {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 18px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
 
-FROM KUTA:
-- Kuta → Tanjung Aan / Bukit Merese: 10 mins
-- Kuta → Gerupuk: 15 mins
-- Kuta → Mawun: 20-25 mins
-- Kuta → Torok: 40 mins
-- Kuta → Selong Belanak: 30 mins
-- Kuta → Ekas: 1hr 15mins
-- Kuta → Pink Beach: 1hr 30mins
-- Kuta → Tetebatu: 1hr 30mins
-- Kuta → Kondo Beach (Gili Kondo access): 2hrs 20mins
-- Kuta → Mataram: 1hr
-- Kuta → Senggigi: 1hr 25mins
-- Kuta → Teluk Nare: 1hr 40mins
-- Kuta → Bangsal: 1hr 50mins
-- Kuta → Senaru (Rinjani base): 3hrs
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--gold);
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+  }
 
-FROM TETEBATU:
-- Tetebatu → Benang Kelambu waterfall: 45 mins
-- Tetebatu → Tiu Kelep waterfall: 2hrs 20mins (too far — use Senaru instead)
+  .option-btn:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(139,105,20,0.1); }
+  .option-btn:hover::before, .option-btn.selected::before { transform: scaleY(1); }
+  .option-btn.selected { border-color: var(--gold); background: var(--gold-pale); }
 
-FROM SENARU:
-- Senaru → Tiu Kelep waterfall: 5 mins
-- Senaru → Sembalun: 50 mins
+  .option-icon { font-size: 24px; margin-bottom: 10px; display: block; }
 
-FROM SENGGIGI:
-- Senggigi → Bangsal/Teluk Nare: 35 mins
-- Senggigi → Mataram: 30 mins
+  .option-title {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    font-weight: normal;
+    color: var(--forest);
+    margin-bottom: 4px;
+  }
 
-INTER-GILI:
-- Gili Air → Gili Meno: 10 mins
-- Gili Meno → Gili T: 10 mins
-- Gili Air → Gili T: 15 mins
+  .option-desc {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
 
-=== HARD RULES — NEVER BREAK THESE ===
-- NEVER suggest a boat to the Gilis from Kuta — always route via Teluk Nare or Bangsal
-- NEVER describe beachside dining in Kuta — restaurants are in town, 2 mins from beach
-- NEVER recommend accommodation at Tanjung Aan or Mawun — none exists
-- NEVER describe Selong Belanak as having cliffs, clifftop views, freediving, or snorkelling lessons — it is for surf lessons and beach relaxation
-- NEVER suggest Tiu Kelep as a day trip from Tetebatu — it is 2hrs 20mins away. Always pair Tiu Kelep with Senaru.
-- NEVER place Gili Kondo alongside the main three Gilis in a south Lombok itinerary
-- NEVER combine a morning Gili return with afternoon Pink Beach — drive time makes it impossible
-- ALWAYS recommend Bukit Merese for sunset when an afternoon at Tanjung Aan is suggested
-- ALWAYS pair Tiu Kelep with a Senaru stay, not Tetebatu
-- ALWAYS recommend Benang Kelambu as the waterfall day trip from Tetebatu
-`;
+  .question-nav { display: flex; justify-content: center; gap: 14px; margin-top: 8px; }
 
-    const enforcedPrompt = `${lombokKnowledgeBase}
+  .btn-back {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1.5px solid var(--border);
+    padding: 12px 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
 
-${prompt}
+  .btn-back:hover { border-color: var(--gold); color: var(--gold); }
 
-IMPORTANT: You must cover ALL ${dayCount} days — Day 1 through Day ${dayCount}. Be concise: 3-4 sentences per day maximum. Every day must be included — do not skip or summarise remaining days. After Day ${dayCount}, add a short practical tips section (4 bullet points max) and the ecosystem cards. Keep the entire response under 1800 tokens. Always use the ground-truth knowledge base above for all recommendations — never contradict it.`;
+  .btn-next {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cream);
+    background: var(--forest);
+    border: 1.5px solid var(--forest);
+    padding: 12px 36px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.35;
+    pointer-events: none;
+  }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 2500,
-        messages: [{ role: 'user', content: enforcedPrompt }]
-      })
+  .btn-next.ready { opacity: 1; pointer-events: all; }
+  .btn-next.ready:hover { background: var(--gold); border-color: var(--gold); }
+
+  .btn-generate {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--forest);
+    background: var(--gold-light);
+    border: none;
+    padding: 14px 42px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .btn-generate.ready { opacity: 1; pointer-events: all; }
+  .btn-generate.ready:hover { background: #D4A020; transform: translateY(-1px); }
+
+  .loading-screen { display: none; text-align: center; padding: 80px 20px; }
+  .loading-screen.active { display: block; }
+
+  .loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin: 0 auto 28px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-title { font-size: 22px; font-weight: normal; color: var(--forest); margin-bottom: 10px; }
+
+  .loading-sub {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .loading-steps { margin-top: 32px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+
+  .loading-step {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .loading-step.visible { opacity: 1; }
+
+  .results-screen { display: none; animation: fadeUp 0.5s ease forwards; }
+  .results-screen.active { display: block; }
+
+  .results-header {
+    background: var(--forest);
+    border-radius: 6px;
+    padding: 40px 40px 36px;
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .results-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+  }
+
+  .results-eyebrow {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+  }
+
+  .results-title {
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: normal;
+    color: #FAF7F0;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+
+  .results-title em { font-style: italic; color: var(--gold-light); }
+
+  .results-summary-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+
+  .summary-tag {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border: 1px solid rgba(139,105,20,0.4);
+    color: var(--gold-light);
+    border-radius: 2px;
+  }
+
+  .itinerary-section { margin-bottom: 36px; }
+
+  .itinerary-section h2 {
+    font-size: 22px;
+    font-weight: normal;
+    color: var(--forest);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .day-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+
+  .day-header {
+    background: var(--forest-mid);
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .day-number { font-family: Georgia, serif; font-size: 13px; font-style: italic; color: var(--gold-light); white-space: nowrap; }
+  .day-title { font-family: Georgia, serif; font-size: 16px; font-weight: normal; color: #FAF7F0; }
+
+  .day-body { padding: 20px 22px; }
+  .day-body p { font-size: 14.5px; color: var(--text-muted); line-height: 1.75; margin-bottom: 12px; }
+  .day-body p:last-child { margin-bottom: 0; }
+
+  .day-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+  .day-tag {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border: 1px solid var(--border-strong);
+    color: var(--gold);
+    border-radius: 2px;
+  }
+
+  .practical-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .practical-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 22px 20px;
+  }
+
+  .practical-card h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .practical-card p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+
+  .practical-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--forest);
+    background: var(--gold-pale);
+    padding: 6px 14px;
+    border-radius: 3px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .practical-link:hover { background: #EAD99A; }
+
+  .ecosystem-section { margin-bottom: 28px; }
+
+  .ecosystem-section h2 {
+    font-size: 20px;
+    font-weight: normal;
+    color: var(--forest);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ecosystem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+  }
+
+  .ecosystem-card {
+    background: var(--forest);
+    border-radius: 6px;
+    padding: 24px 22px;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: transform 0.2s;
+  }
+
+  .ecosystem-card:hover { transform: translateY(-2px); }
+
+  .ecosystem-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+  }
+
+  .ecosystem-card-eyebrow {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+  }
+
+  .ecosystem-card h3 {
+    font-family: Georgia, serif;
+    font-size: 17px;
+    font-weight: normal;
+    color: #FAF7F0;
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+
+  .ecosystem-card p {
+    font-size: 13px;
+    color: rgba(250,247,240,0.62);
+    line-height: 1.65;
+    margin-bottom: 14px;
+  }
+
+  .ecosystem-card-btn {
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--forest);
+    background: var(--gold-light);
+    padding: 7px 16px;
+    border-radius: 3px;
+    transition: background 0.2s;
+  }
+
+  .ecosystem-card:hover .ecosystem-card-btn { background: #D4A020; }
+
+  .affiliate-bar {
+    background: var(--forest);
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .affiliate-bar p { font-size: 14px; color: rgba(250,247,240,0.82); line-height: 1.6; margin: 0; }
+  .affiliate-bar strong { color: #FAF7F0; font-style: italic; font-weight: normal; }
+
+  .affiliate-btn {
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--forest);
+    background: var(--gold-light);
+    padding: 10px 20px;
+    border-radius: 3px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .affiliate-btn:hover { background: #D4A020; }
+
+  .share-bar {
+    background: var(--cream-dark);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 32px 28px;
+    margin-top: 36px;
+    text-align: center;
+  }
+
+  .share-bar h3 { font-size: 20px; font-weight: normal; color: var(--forest); margin-bottom: 6px; }
+  .share-bar p { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+
+  .share-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+
+  .share-btn {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 11px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-copy { background: var(--forest); color: #FAF7F0; }
+  .btn-copy:hover { background: var(--forest-light); }
+  .btn-whatsapp { background: #25D366; color: white; }
+  .btn-whatsapp:hover { background: #1da851; }
+  .btn-email { background: var(--white); color: var(--forest); border: 1.5px solid var(--border-strong); }
+  .btn-email:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-restart { background: transparent; color: var(--text-muted); border: 1.5px solid var(--border); }
+  .btn-restart:hover { border-color: var(--gold); color: var(--gold); }
+
+  .copy-confirm {
+    display: none;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: var(--gold);
+    margin-top: 14px;
+    letter-spacing: 0.08em;
+  }
+
+  .error-msg {
+    display: none;
+    background: #FFF3CD;
+    border: 1px solid #F0C040;
+    border-radius: 4px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #7A5C00;
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .planner { padding: 32px 18px 60px; }
+    .options-grid { grid-template-columns: 1fr 1fr; }
+    .results-header { padding: 26px 20px; }
+    .share-buttons { flex-direction: column; align-items: stretch; }
+    .share-btn { text-align: center; }
+    .affiliate-bar { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="planner">
+
+  <div class="planner-header">
+    <p class="planner-eyebrow">Discover Lombok &nbsp;/&nbsp; Plan Your Trip</p>
+    <h1>Your Personal <em>Lombok</em> Itinerary</h1>
+    <p>Answer five quick questions and our AI planner builds a personalised day-by-day itinerary matched exactly to how you want to travel, complete with accommodation, experiences, and booking links.</p>
+  </div>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar">
+      <div class="progress-step active" id="step1">1</div>
+      <div class="progress-line" id="line1"></div>
+      <div class="progress-step" id="step2">2</div>
+      <div class="progress-line" id="line2"></div>
+      <div class="progress-step" id="step3">3</div>
+      <div class="progress-line" id="line3"></div>
+      <div class="progress-step" id="step4">4</div>
+      <div class="progress-line" id="line4"></div>
+      <div class="progress-step" id="step5">5</div>
+    </div>
+    <div class="progress-labels">
+      <span class="progress-label active" id="lbl1">Style</span>
+      <span class="progress-label" id="lbl2">Length</span>
+      <span class="progress-label" id="lbl3">Party</span>
+      <span class="progress-label" id="lbl4">Arrival</span>
+      <span class="progress-label" id="lbl5">Budget</span>
+    </div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="question-screen active" id="q1">
+    <p class="question-label">Question 1 of 5</p>
+    <h2 class="question-title">What kind of traveller are you?</h2>
+    <p class="question-sub">Choose the experience that excites you most.</p>
+    <div class="options-grid">
+      <button class="option-btn" onclick="selectOption('style','surf',this)">
+        <span class="option-icon">🏄</span>
+        <div class="option-title">Surf &amp; Coast</div>
+        <div class="option-desc">Chasing breaks, beach days, and sunset sessions</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('style','snorkel',this)">
+        <span class="option-icon">🤿</span>
+        <div class="option-title">Snorkel &amp; Dive</div>
+        <div class="option-desc">Reefs, turtles, crystal water, and marine life</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('style','culture',this)">
+        <span class="option-icon">🛕</span>
+        <div class="option-title">Culture &amp; Hiking</div>
+        <div class="option-desc">Villages, rice terraces, Rinjani, and waterfalls</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('style','relax',this)">
+        <span class="option-icon">🌴</span>
+        <div class="option-title">Relax &amp; Unwind</div>
+        <div class="option-desc">Beautiful beaches, good food, and slow days</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('style','mix',this)">
+        <span class="option-icon">✨</span>
+        <div class="option-title">Mix It All</div>
+        <div class="option-desc">A bit of everything Lombok has to offer</div>
+      </button>
+    </div>
+    <div class="question-nav">
+      <button class="btn-next" id="next1" onclick="goToQuestion(2)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-screen" id="q2">
+    <p class="question-label">Question 2 of 5</p>
+    <h2 class="question-title">How long is your trip?</h2>
+    <p class="question-sub">We'll pace the itinerary to make the most of your time.</p>
+    <div class="options-grid">
+      <button class="option-btn" onclick="selectOption('length','3',this)">
+        <span class="option-icon">⚡</span>
+        <div class="option-title">3 Days</div>
+        <div class="option-desc">Quick escape, focus on the highlights</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('length','5',this)">
+        <span class="option-icon">🌟</span>
+        <div class="option-title">5 Days</div>
+        <div class="option-desc">A proper introduction to the island</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('length','7',this)">
+        <span class="option-icon">🗓</span>
+        <div class="option-title">7 Days</div>
+        <div class="option-desc">Time to explore multiple regions</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('length','10',this)">
+        <span class="option-icon">🌏</span>
+        <div class="option-title">10 Days+</div>
+        <div class="option-desc">Deep dive into everything Lombok offers</div>
+      </button>
+    </div>
+    <div class="question-nav">
+      <button class="btn-back" onclick="goToQuestion(1)">← Back</button>
+      <button class="btn-next" id="next2" onclick="goToQuestion(3)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-screen" id="q3">
+    <p class="question-label">Question 3 of 5</p>
+    <h2 class="question-title">Who are you travelling with?</h2>
+    <p class="question-sub">We'll tailor the pace and experience recommendations accordingly.</p>
+    <div class="options-grid">
+      <button class="option-btn" onclick="selectOption('party','solo',this)">
+        <span class="option-icon">🧳</span>
+        <div class="option-title">Solo</div>
+        <div class="option-desc">Freedom, flexibility, and meeting people</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('party','couple',this)">
+        <span class="option-icon">💑</span>
+        <div class="option-title">Couple</div>
+        <div class="option-desc">Romance, shared adventures, and sunsets</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('party','friends',this)">
+        <span class="option-icon">👥</span>
+        <div class="option-title">Friends Group</div>
+        <div class="option-desc">Good times, variety, and group energy</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('party','family',this)">
+        <span class="option-icon">👨‍👩‍👧</span>
+        <div class="option-title">Family with Kids</div>
+        <div class="option-desc">Safe beaches, easy activities, and comfort</div>
+      </button>
+    </div>
+    <div class="question-nav">
+      <button class="btn-back" onclick="goToQuestion(2)">← Back</button>
+      <button class="btn-next" id="next3" onclick="goToQuestion(4)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-screen" id="q4">
+    <p class="question-label">Question 4 of 5</p>
+    <h2 class="question-title">Where are you arriving from?</h2>
+    <p class="question-sub">This helps us plan your first and last days efficiently.</p>
+    <div class="options-grid">
+      <button class="option-btn" onclick="selectOption('arrival','bali',this)">
+        <span class="option-icon">⛵</span>
+        <div class="option-title">From Bali</div>
+        <div class="option-desc">Fast boat or short flight across the strait</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('arrival','flight',this)">
+        <span class="option-icon">✈️</span>
+        <div class="option-title">Flying Direct</div>
+        <div class="option-desc">Arriving at Lombok International Airport</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('arrival','already',this)">
+        <span class="option-icon">📍</span>
+        <div class="option-title">Already on Lombok</div>
+        <div class="option-desc">Based in Kuta — planning what to explore next</div>
+      </button>
+    </div>
+    <div class="question-nav">
+      <button class="btn-back" onclick="goToQuestion(3)">← Back</button>
+      <button class="btn-next" id="next4" onclick="goToQuestion(5)">Next →</button>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-screen" id="q5">
+    <p class="question-label">Question 5 of 5</p>
+    <h2 class="question-title">What's your budget style?</h2>
+    <p class="question-sub">We'll match accommodation and experience recommendations to suit.</p>
+    <div class="options-grid">
+      <button class="option-btn" onclick="selectOption('budget','budget',this)">
+        <span class="option-icon">🎒</span>
+        <div class="option-title">Budget</div>
+        <div class="option-desc">Guesthouses, warungs, and local transport</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('budget','mid',this)">
+        <span class="option-icon">🏨</span>
+        <div class="option-title">Mid-Range</div>
+        <div class="option-desc">Comfortable hotels and a mix of dining</div>
+      </button>
+      <button class="option-btn" onclick="selectOption('budget','premium',this)">
+        <span class="option-icon">🌟</span>
+        <div class="option-title">Premium</div>
+        <div class="option-desc">Villas, fine dining, and private experiences</div>
+      </button>
+    </div>
+    <div class="question-nav">
+      <button class="btn-back" onclick="goToQuestion(4)">← Back</button>
+      <button class="btn-generate" id="btnGenerate" onclick="generateItinerary()">Build My Itinerary ✦</button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-spinner"></div>
+    <h2 class="loading-title">Building your itinerary</h2>
+    <p class="loading-sub">Personalising your Lombok experience</p>
+    <div class="loading-steps">
+      <p class="loading-step" id="ls1">Analysing your travel style</p>
+      <p class="loading-step" id="ls2">Selecting the best beaches and regions</p>
+      <p class="loading-step" id="ls3">Planning your day by day route</p>
+      <p class="loading-step" id="ls4">Matching accommodation and experiences</p>
+      <p class="loading-step" id="ls5">Adding local tips and booking links</p>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-screen" id="resultsScreen">
+    <div class="results-header">
+      <p class="results-eyebrow">Your Personalised Itinerary</p>
+      <h2 class="results-title" id="itineraryTitle">Loading...</h2>
+      <div class="results-summary-tags" id="summaryTags"></div>
+    </div>
+    <div class="itinerary-section" id="itineraryDays"></div>
+    <div id="practicalSection"></div>
+    <div class="ecosystem-section" id="ecosystemSection"></div>
+    <div id="affiliateSection"></div>
+    <div class="share-bar">
+      <h3>Save or Share Your Itinerary</h3>
+      <p>Take this plan with you or share it with your travel companions.</p>
+      <div class="share-buttons">
+        <button class="share-btn btn-copy" onclick="copyItinerary()">📋 Copy to Clipboard</button>
+        <button class="share-btn btn-whatsapp" onclick="shareWhatsApp()">💬 Share on WhatsApp</button>
+        <button class="share-btn btn-email" onclick="shareEmail()">✉️ Send by Email</button>
+        <button class="share-btn btn-restart" onclick="restartPlanner()">↺ Start Over</button>
+      </div>
+      <p class="copy-confirm" id="copyConfirm">✓ Itinerary copied to clipboard</p>
+    </div>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+</div>
+<script>
+  const answers = { style: null, length: null, party: null, arrival: null, budget: null };
+  let currentQuestion = 1;
+
+  function selectOption(key, value, el) {
+    answers[key] = value;
+    el.closest('.options-grid').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    const map = { style:'next1', length:'next2', party:'next3', arrival:'next4', budget:'btnGenerate' };
+    const btn = document.getElementById(map[key]);
+    if (btn) btn.classList.add('ready');
+  }
+
+  function goToQuestion(n) {
+    document.getElementById('q' + currentQuestion).classList.remove('active');
+    document.getElementById('q' + n).classList.add('active');
+    for (let i = 1; i <= 5; i++) {
+      const step = document.getElementById('step' + i);
+      const line = document.getElementById('line' + i);
+      const lbl = document.getElementById('lbl' + i);
+      if (i < n) {
+        step.classList.remove('active'); step.classList.add('completed'); step.innerHTML = '✓';
+        if (line) line.classList.add('completed');
+        if (lbl) { lbl.classList.remove('active'); }
+      } else if (i === n) {
+        step.classList.add('active'); step.classList.remove('completed'); step.innerHTML = i;
+        if (lbl) lbl.classList.add('active');
+      } else {
+        step.classList.remove('active','completed'); step.innerHTML = i;
+        if (line) line.classList.remove('completed');
+        if (lbl) lbl.classList.remove('active');
+      }
+    }
+    currentQuestion = n;
+  }
+
+  async function generateItinerary() {
+    document.getElementById('q5').classList.remove('active');
+    document.getElementById('progressWrap').style.display = 'none';
+    document.getElementById('loadingScreen').classList.add('active');
+
+    ['ls1','ls2','ls3','ls4','ls5'].forEach((id, i) => {
+      setTimeout(() => document.getElementById(id).classList.add('visible'), i * 800);
     });
 
-    const data = await response.json();
-    const text = data.content.map(c => c.text || '').join('\n');
-
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      },
-      body: JSON.stringify({ result: text })
+    const styleMap = {
+      surf: 'surfing and coastal exploration, including surf breaks at Gerupuk, Mawi, Ekas, and Selong Belanak',
+      snorkel: 'snorkelling, freediving, and marine life encounters at the Gili Islands, Pink Beach, and Gili Kondo',
+      culture: 'cultural immersion, hiking, rice terrace walks in Tetebatu, Rinjani trekking, Sasak village visits, and waterfall hikes',
+      relax: 'relaxation, beautiful beaches, sunset watching, and slow travel across Lombok\'s finest bays',
+      mix: 'a balanced mix of surfing, snorkelling, cultural experiences, hiking, and beach relaxation'
     };
 
-  } catch (err) {
-    return {
-      statusCode: 500,
-      headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: err.message })
+    const partyMap = {
+      solo: 'a solo traveller who values flexibility, social scenes, and authentic local experiences',
+      couple: 'a couple seeking romance, beautiful sunsets, intimate beaches, and shared adventures',
+      friends: 'a group of friends looking for variety, social atmosphere, surf, and island hopping',
+      family: 'a family with children requiring safe swimming beaches, easy activities, and comfortable logistics'
     };
+
+    const arrivalMap = {
+      bali: 'arriving from Bali, either by fast boat to the Gili Islands or by short flight to Lombok International Airport (LOP). Day 1 should include the journey from Bali and settling into their base.',
+      flight: 'flying direct into Lombok International Airport (LOP) near Praya in central-south Lombok. Day 1 should include airport arrival, transfer to their base (approximately 25 minutes to Kuta Lombok), and an easy first afternoon.',
+      already: 'ALREADY BASED IN KUTA LOMBOK. They are already on the island and settled. DO NOT include any arrival day, airport transfers, flights, or journey to Lombok. Day 1 starts immediately in Kuta Lombok with a full day of activities — treat them as locals who are ready to explore from the moment they wake up.'
+    };
+
+    const budgetMap = {
+      budget: 'budget-conscious travel: local guesthouses, warungs, bemos, and shared boat transfers',
+      mid: 'mid-range comfort: boutique hotels, a mix of local and western dining, private transfers where needed',
+      premium: 'premium travel: private villas, fine dining, private boat charters, and personal drivers'
+    };
+
+    const alreadyOnLombokNote = answers.arrival === 'already'
+      ? '\n\nCRITICAL: This traveller is already based in Kuta Lombok. Day 1 must start with a full day of exploration from Kuta — NO airport, NO arrival logistics, NO journey to Lombok. Jump straight into the adventure.'
+      : '';
+
+    const prompt = `You are the expert travel planner for Discover Lombok (discoverlombok.com), a premium Indonesian travel guide. Create a highly personalised ${answers.length}-day Lombok itinerary for ${partyMap[answers.party]}, focused on ${styleMap[answers.style]}, ${arrivalMap[answers.arrival]}, travelling on a ${budgetMap[answers.budget]} basis.${alreadyOnLombokNote}
+
+Use EXACTLY these section markers in your response:
+
+ITINERARY_NAME: [Creative evocative name, e.g. "The Seven-Day Surf and Soul Loop"]
+
+SUMMARY_TAGS: [Exactly 5 tags separated by | matching: trip length, main style, party type, budget, main regions]
+
+DAYS:
+Repeat this block for EVERY day:
+DAY_START
+DAY_NUMBER: Day [N]
+DAY_TITLE: [Short evocative title for the day]
+DAY_CONTENT: [2-3 sentences. Be SPECIFIC to Lombok. Name real beaches, villages, and regions: Tanjung Aan, Kuta Lombok, Selong Belanak, Mawun Beach, Areguling, Gerupuk, Mawi, Ekas Bay, Senggigi, Malimbu Hill, Pura Batu Bolong, Tetebatu, Sembalun Valley, Gili Trawangan, Gili Meno, Gili Air, Gili Kondo, Pink Beach, Desert Point, Sade Village, Sukarara, Narmada, Benang Kelambu, Tiu Kelep waterfalls as appropriate to the travel style.]
+DAY_TAGS: [3-4 activity tags separated by |]
+DAY_END
+
+PRACTICAL_TITLE: Getting Around
+PRACTICAL_CONTENT: [3 sentences on transport, basing strategy, and key logistics for this specific itinerary]
+
+ACCOMMODATION_TITLE: Where to Stay
+ACCOMMODATION_CONTENT: [2-3 sentences with specific area recommendations matching budget and style. Mention LombokStays (lombokstays.com) as the place to search and book accommodation across the island.]
+
+FOOD_TITLE: Eating Well on Lombok
+FOOD_CONTENT: [2 sentences on the food experience relevant to this itinerary. Mention local Sasak cuisine, warungs, seafood, and reference Lombok Cuisine (lombokcuisine.com) as the guide to the island's best food experiences.]
+
+TIPS_TITLE: Local Tips for This Trip
+TIPS_CONTENT: [2-3 specific insider tips directly relevant to this exact itinerary and travel style]
+
+Be specific, warm, and authoritative. No generic travel advice. Every recommendation should be distinctly Lombok.`;
+
+    try {
+      const response = await fetch('/.netlify/functions/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await response.json();
+      const text = data.result;
+      renderResults(text);
+
+    } catch(err) {
+      document.getElementById('loadingScreen').classList.remove('active');
+      document.getElementById('resultsScreen').classList.add('active');
+      const errEl = document.getElementById('errorMsg');
+      errEl.style.display = 'block';
+      errEl.textContent = 'Something went wrong building your itinerary. Please try refreshing and starting again.';
+    }
   }
-};
+
+  function renderResults(text) {
+    document.getElementById('loadingScreen').classList.remove('active');
+    document.getElementById('resultsScreen').classList.add('active');
+
+    const nameMatch = text.match(/ITINERARY_NAME:\s*(.+)/);
+    const name = nameMatch ? nameMatch[1].trim() : 'Your Lombok Itinerary';
+    const words = name.split(' ');
+    const mid = Math.ceil(words.length / 2);
+    document.getElementById('itineraryTitle').innerHTML = words.slice(0,mid).join(' ') + ' <em>' + words.slice(mid).join(' ') + '</em>';
+
+    const tagsMatch = text.match(/SUMMARY_TAGS:\s*(.+)/);
+    if (tagsMatch) {
+      const lengthLabel = answers.length === '10' ? '10 Days+' : answers.length + ' Days';
+      const tags = tagsMatch[1].split('|');
+      tags[0] = lengthLabel;
+      document.getElementById('summaryTags').innerHTML = tags.map(t => `<span class="summary-tag">${t.trim()}</span>`).join('');
+    }
+
+    const dayMatches = [...text.matchAll(/DAY_START([\s\S]*?)DAY_END/g)];
+    let daysHtml = '<h2>Your Day by Day Itinerary</h2>';
+    dayMatches.forEach(m => {
+      const b = m[1];
+      const num = (b.match(/DAY_NUMBER:\s*(.+)/) || [])[1] || '';
+      const title = (b.match(/DAY_TITLE:\s*(.+)/) || [])[1] || '';
+      const content = (b.match(/DAY_CONTENT:\s*([\s\S]*?)(?=DAY_TAGS|DAY_END)/) || [])[1] || '';
+      const tagsRaw = (b.match(/DAY_TAGS:\s*(.+)/) || [])[1] || '';
+      const tags = tagsRaw.split('|').map(t => `<span class="day-tag">${t.trim()}</span>`).join('');
+      daysHtml += `<div class="day-card"><div class="day-header"><span class="day-number">${num.trim()}</span><span class="day-title">${title.trim()}</span></div><div class="day-body"><p>${content.trim()}</p><div class="day-tags">${tags}</div></div></div>`;
+    });
+    document.getElementById('itineraryDays').innerHTML = daysHtml;
+
+    const pTitle = (text.match(/PRACTICAL_TITLE:\s*(.+)/) || [])[1] || 'Getting Around';
+    const pContent = (text.match(/PRACTICAL_CONTENT:\s*([\s\S]*?)(?=ACCOMMODATION_TITLE)/) || [])[1] || '';
+    const aTitle = (text.match(/ACCOMMODATION_TITLE:\s*(.+)/) || [])[1] || 'Where to Stay';
+    const aContent = (text.match(/ACCOMMODATION_CONTENT:\s*([\s\S]*?)(?=FOOD_TITLE)/) || [])[1] || '';
+    const fTitle = (text.match(/FOOD_TITLE:\s*(.+)/) || [])[1] || 'Eating Well';
+    const fContent = (text.match(/FOOD_CONTENT:\s*([\s\S]*?)(?=TIPS_TITLE)/) || [])[1] || '';
+    const tTitle = (text.match(/TIPS_TITLE:\s*(.+)/) || [])[1] || 'Local Tips';
+    const tContent = (text.match(/TIPS_CONTENT:\s*([\s\S]*?)$/) || [])[1] || '';
+
+    document.getElementById('practicalSection').innerHTML = `
+      <div class="practical-grid">
+        <div class="practical-card"><h3>${pTitle.trim()}</h3><p>${pContent.trim()}</p></div>
+        <div class="practical-card"><h3>${aTitle.trim()}</h3><p>${aContent.trim()}</p><a class="practical-link" href="https://www.lombokstays.com" target="_blank" rel="noopener">Search LombokStays →</a></div>
+        <div class="practical-card"><h3>${fTitle.trim()}</h3><p>${fContent.trim()}</p><a class="practical-link" href="https://www.discoverlombok.com/post/best-food-in-lombok" target="_blank" rel="noopener">Read the Lombok Food Guide →</a></div>
+        <div class="practical-card"><h3>${tTitle.trim()}</h3><p>${tContent.trim()}</p></div>
+      </div>`;
+
+    let ecoCards = '';
+
+    if (answers.style === 'surf' || answers.style === 'mix') {
+      ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/post/where-to-surf-in-lombok" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Surf Guide</p><h3>Surfing in Lombok</h3><p>The complete guide to every break on the island, from beginner-friendly Selong Belanak to the world-class barrel at Desert Point.</p><span class="ecosystem-card-btn">Explore Surf Guide →</span></a>`;
+    }
+
+    if (answers.style === 'snorkel' || answers.style === 'mix' || answers.style === 'relax') {
+      ecoCards += `<a class="ecosystem-card" href="https://www.giliboattours.com" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Island Transfers</p><h3>Gili Boat Tours</h3><p>Fast boats and private charters to the Gili Islands and beyond. Daily departures from multiple Lombok points.</p><span class="ecosystem-card-btn">Book Your Transfer →</span></a>`;
+    }
+
+    if (answers.style === 'culture' || answers.style === 'mix') {
+      ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/post/tetebatu-lombok" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Destination Guide</p><h3>Tetebatu Guide</h3><p>Rice terraces, jungle waterfalls, and the green heart of Lombok. Everything you need to plan your highland stay.</p><span class="ecosystem-card-btn">Read the Guide →</span></a>`;
+    }
+
+    if (answers.arrival === 'bali' || answers.arrival === 'flight') {
+      ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/flights-to-lombok" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Flights & Transport</p><h3>Lombok Flights</h3><p>Find the best flights to Lombok from Bali, Jakarta, and beyond. Routes, airlines, and booking tips in one place.</p><span class="ecosystem-card-btn">Find Flights →</span></a>`;
+    }
+
+    ecoCards += `<a class="ecosystem-card" href="https://www.lombokstays.com" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">${answers.budget === 'premium' ? 'Villas & Resorts' : answers.budget === 'mid' ? 'Boutique Hotels' : 'Guesthouses & Stays'}</p><h3>LombokStays</h3><p>${answers.budget === 'premium' ? 'Curated private villas and luxury resorts across Lombok and the Gili Islands.' : answers.budget === 'mid' ? 'Handpicked boutique hotels and comfortable stays matched to your itinerary.' : 'The best budget guesthouses and local stays across every region of Lombok.'}</p><span class="ecosystem-card-btn">${answers.party === 'couple' ? 'Find Romantic Stays →' : answers.party === 'family' ? 'Find Family Stays →' : answers.party === 'friends' ? 'Find Group Stays →' : 'Browse Stays →'}</span></a>`;
+
+    ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/destinations" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Beach Guide</p><h3>Lombok Beaches</h3><p>Every beach on the island, ranked and reviewed. Find the perfect beach for your travel style and the days in your itinerary.</p><span class="ecosystem-card-btn">Explore Beaches →</span></a>`;
+
+    if (ecoCards) {
+      document.getElementById('ecosystemSection').innerHTML = `<h2>Plan &amp; Book Your Trip</h2><div class="ecosystem-grid">${ecoCards}</div>`;
+    }
+
+    let affHtml = `<div class="affiliate-bar"><p><strong>Stay connected from day one.</strong> Get an Indonesian eSIM before you fly, it activates on arrival and keeps maps, Grab, and messaging working across the whole island.</p><a class="affiliate-btn" href="https://www.airalo.com" target="_blank" rel="noopener">Get Your eSIM →</a></div>`;
+
+    if (answers.style === 'surf' || answers.style === 'mix') {
+      affHtml += `<div class="affiliate-bar"><p><strong>Heading to Gerupuk or the Gilis?</strong> Book your boat transfers and surf excursions with Gili Boat Tours, departing daily from Kuta and the south coast.</p><a class="affiliate-btn" href="https://www.giliboattours.com" target="_blank" rel="noopener">Book Boat Tours →</a></div>`;
+    }
+
+    document.getElementById('affiliateSection').innerHTML = affHtml;
+  }
+
+  function buildShareText() {
+    const title = document.getElementById('itineraryTitle').innerText;
+    const tags = document.getElementById('summaryTags').innerText;
+    let text = `MY LOMBOK ITINERARY\n${title}\n${tags}\n\n`;
+    document.querySelectorAll('.day-card').forEach(card => {
+      const num = card.querySelector('.day-number').innerText;
+      const t = card.querySelector('.day-title').innerText;
+      const c = card.querySelector('.day-body p').innerText;
+      text += `${num}: ${t}\n${c}\n\n`;
+    });
+    text += `Plan your own Lombok itinerary free at https://www.discoverlombok.com`;
+    return text;
+  }
+
+  function copyItinerary() {
+    navigator.clipboard.writeText(buildShareText()).then(() => {
+      const el = document.getElementById('copyConfirm');
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 3000);
+    });
+  }
+
+  function shareWhatsApp() {
+    window.open(`https://wa.me/?text=${encodeURIComponent(buildShareText())}`, '_blank');
+  }
+
+  function shareEmail() {
+    const sub = encodeURIComponent('My Lombok Itinerary from Discover Lombok');
+    const body = encodeURIComponent(buildShareText());
+    window.open(`mailto:?subject=${sub}&body=${body}`);
+  }
+
+  function restartPlanner() {
+    Object.keys(answers).forEach(k => answers[k] = null);
+    currentQuestion = 1;
+    document.getElementById('resultsScreen').classList.remove('active');
+    document.getElementById('progressWrap').style.display = 'block';
+    for (let i = 1; i <= 5; i++) {
+      const step = document.getElementById('step' + i);
+      const line = document.getElementById('line' + i);
+      const lbl = document.getElementById('lbl' + i);
+      step.classList.remove('active','completed');
+      step.innerHTML = i;
+      if (line) line.classList.remove('completed');
+      if (lbl) lbl.classList.remove('active');
+      if (i > 1) {
+        document.getElementById('q' + i).classList.remove('active');
+        document.getElementById('q' + i).querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        const btnId = i < 5 ? 'next' + i : 'btnGenerate';
+        const btn = document.getElementById(btnId);
+        if (btn) btn.classList.remove('ready');
+      }
+    }
+    document.getElementById('step1').classList.add('active');
+    document.getElementById('lbl1').classList.add('active');
+    document.getElementById('q1').classList.add('active');
+    document.getElementById('q1').querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('next1').classList.remove('ready');
+    document.getElementById('errorMsg').style.display = 'none';
+  }
+</script>
+</body>
+</html>
