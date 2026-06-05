@@ -28,7 +28,7 @@ exports.handler = async function(event) {
     else if (fiveMatch) dayCount = 5;
 
     const lombokKnowledgeBase = `
-LOMBOK GROUND-TRUTH KNOWLEDGE BASE — use this as your primary reference for all accommodation, logistics, and location recommendations. Do not contradict these facts.
+LOMBOK GROUND-TRUTH KNOWLEDGE BASE — use this as your primary reference for all accommodation, logistics, and distance recommendations. Do not contradict these facts.
 
 === SOUTH LOMBOK ===
 
@@ -40,6 +40,7 @@ KUTA LOMBOK (main hub of South Lombok)
 - Plenty of spas and massage studios throughout town
 - Central location for day trips to surrounding beaches
 - Surf scene growing rapidly — attracting increasing surf crowd from Bali
+- BEST BEACHES CLOSE TO KUTA: Tanjung Aan (10 mins), Mawun (20-25 mins), and Kuta beach itself
 
 SELONG BELANAK
 - Approximately 30 minutes from Kuta Lombok
@@ -52,25 +53,44 @@ SELONG BELANAK
 
 TANJUNG AAN
 - Approximately 10 minutes from Kuta Lombok
-- IMPORTANT: No accommodation available here — no villas, no hotels, no guesthouses
+- One of the best beaches close to Kuta — easy day trip
+- IMPORTANT: No accommodation available — no villas, no hotels, no guesthouses
 - A large resort development is under construction (Japanese/Korean investor) but not yet open
 - Currently has two beach clubs on the beach
 - Day trip destination only — guests must stay in Kuta Lombok
 - Do NOT recommend accommodation at Tanjung Aan under any circumstances
 
 MAWUN BEACH
+- Approximately 20-25 minutes from Kuta Lombok
+- One of the best beaches close to Kuta — easy day trip, one of the most beautiful on the island
 - No accommodation available — day trip only
 - A couple of warungs on the beach with deck chairs and umbrellas
-- Beautiful, quieter beach — one of the best on the island
-- Guests must stay in Kuta Lombok or Selong Belanak and visit as a day trip
+- Day trip from Kuta Lombok or Selong Belanak only
+
+TOROK BEACH
+- Approximately 40 minutes from Kuta Lombok
+- Less visited, quieter beach
+
+PINK BEACH (Pantai Tangsi)
+- Approximately 1 hour 30 minutes from Kuta Lombok
+- Unique pink-tinged sand — one of Lombok's most distinctive beaches
+- Worth a day trip for those staying in South Lombok
+
+TETEBATU
+- Approximately 1 hour 30 minutes from Kuta Lombok
+- Rice terraces, jungle walks, waterfalls, black monkeys
+- Cultural experience — very different from the beach scene
+- Guesthouses and eco-stays available
+- Good day trip or overnight stop for those wanting inland nature experience
 
 GERUPUK
-- Small fishing village, popular surf spot
+- Small fishing village near Kuta, popular surf spot
 - Budget guesthouses and surf camps
 - Popular with experienced surfers
 
 === GILI ISLANDS ===
-Getting there: Airport → Bangsal port = 1 hour 20 mins. Bangsal → Gili T by fast boat = 15-20 mins.
+GETTING THERE FROM KUTA: Kuta → Bangsal port = 1 hour 50 minutes. Bangsal → Gili T by fast boat = 15-20 minutes.
+GETTING THERE FROM AIRPORT: Airport → Bangsal port = 1 hour 20 minutes.
 
 GILI TRAWANGAN (Gili T)
 - The party island — most lively and action-packed
@@ -93,7 +113,8 @@ GILI MENO
 - Best for: honeymoons, couples, digital detox, yoga retreats
 
 === NORTH LOMBOK ===
-RINJANI / SENARU AREA
+SENARU / RINJANI AREA
+- Approximately 3 hours from Kuta Lombok
 - Mainly guesthouses and homestays
 - A couple of villas available but limited
 - Cabin-style accommodation popular — rustic and nature-focused
@@ -107,33 +128,57 @@ SENGGIGI
 - Where the larger resorts are based — NOT in South Lombok
 - More suited to middle-aged travellers, older crowd, and families wanting full resort facilities
 - Still relevant and good quality but less popular with younger surf crowd
-- Airport → Senggigi = 1 hour 5 minutes
+- Best for: families, older travellers, those wanting full resort facilities
 
-=== KEY DISTANCES FROM LOMBOK INTERNATIONAL AIRPORT (LOP) ===
+MATARAM (capital city)
+- Administrative capital of Lombok
+- 30 minutes from Senggigi
+- 1 hour from Kuta Lombok
+- Not a tourist destination but useful for transport connections
+
+=== VERIFIED DISTANCES (Google Maps + ground truth) ===
+FROM LOMBOK INTERNATIONAL AIRPORT (LOP):
 - Airport → Kuta Lombok: 25 minutes
-- Airport → Senggigi: 1 hour 5 minutes  
-- Airport → Bangsal port (for Gili Islands): 1 hour 20 minutes
-- Kuta → Selong Belanak: 30 minutes
+- Airport → Senggigi: 1 hour 5 minutes
+- Airport → Bangsal port (Gili Islands): 1 hour 20 minutes
+
+FROM KUTA LOMBOK:
 - Kuta → Tanjung Aan: 10 minutes
-- Kuta → Mawun: approximately 20-25 minutes
+- Kuta → Mawun Beach: 20-25 minutes
+- Kuta → Torok Beach: 40 minutes
+- Kuta → Selong Belanak: 30 minutes
+- Kuta → Pink Beach: 1 hour 30 minutes
+- Kuta → Tetebatu: 1 hour 30 minutes
+- Kuta → Mataram: 1 hour
+- Kuta → Senggigi: 1 hour 25 minutes
+- Kuta → Bangsal port (Gili Islands): 1 hour 50 minutes
+- Kuta → Senaru (Rinjani base): 3 hours
+
+FROM SENGGIGI:
+- Senggigi → Bangsal port: 35 minutes
+- Senggigi → Mataram: 30 minutes
+
+BOAT TIMES:
 - Bangsal → Gili Trawangan (fast boat): 15-20 minutes
 
-=== ACCOMMODATION RULES ===
+=== ACCOMMODATION PLACEMENT RULES ===
 - NEVER recommend accommodation at Tanjung Aan or Mawun — none exists
 - For premium/luxury couples → Selong Belanak villas or Gili Air
 - For surfers → Kuta Lombok is the base
 - For party crowd → Gili Trawangan
 - For families wanting resorts → Senggigi
-- For honeymoons/romance/wellness → Gili Meno or Selong Belanak
+- For honeymoons/romance/wellness → Gili Meno or Selong Belanak villas
 - For Rinjani trekking → Senaru guesthouses
+- For inland/cultural experience → Tetebatu guesthouses or eco-stays
 - Always mention realistic drive times when recommending locations
+- If staying in Kuta, highlight Tanjung Aan and Mawun as easy nearby beach day trips
 `;
 
     const enforcedPrompt = `${lombokKnowledgeBase}
 
 ${prompt}
 
-IMPORTANT: You must cover ALL ${dayCount} days — Day 1 through Day ${dayCount}. Be concise: 3-4 sentences per day maximum. Every day must be included — do not skip or summarise remaining days. After Day ${dayCount}, add a short practical tips section (4 bullet points max) and the ecosystem cards. Keep the entire response under 1800 tokens. Always use the ground-truth knowledge base above for accommodation and distance recommendations — never contradict it.`;
+IMPORTANT: You must cover ALL ${dayCount} days — Day 1 through Day ${dayCount}. Be concise: 3-4 sentences per day maximum. Every day must be included — do not skip or summarise remaining days. After Day ${dayCount}, add a short practical tips section (4 bullet points max) and the ecosystem cards. Keep the entire response under 1800 tokens. Always use the ground-truth knowledge base above for all accommodation, beach, and distance recommendations — never contradict it.`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
