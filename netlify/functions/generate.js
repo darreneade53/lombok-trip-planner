@@ -38,7 +38,7 @@ SOUTH LOMBOK:
 - Torok = 40min from Kuta. Quiet beach, day trip.
 - Ekas = 1hr15min from Kuta. Remote surf.
 - Pink Beach = 1hr30min from Kuta (East Lombok). Day trip. Good snorkelling.
-- Kondo Beach (Gili Kondo access) = 2hr20min from Kuta (East Lombok). Combine with Pink Beach.
+- Kondo Beach (Gili Kondo access) = 2hr20min from Kuta (East Lombok). Pink Beach to Kondo Beach = 2hr10min — NEVER combine in one day. Each requires a separate full day trip.
 
 GILI ISLANDS — order closest to mainland: Air → Meno (10min) → Trawangan (15min from Air).
 - Gili Air = closest, best balance, low-key, all budgets, yoga, restaurants.
@@ -75,7 +75,7 @@ HARD RULES:
 - No freediving at Selong Belanak — surf lessons only.
 - Never suggest Tiu Kelep from Tetebatu — pair with Senaru.
 - Always recommend Bukit Merese for sunset at Tanjung Aan.
-- Gili Kondo = East Lombok only, not with main Gilis.`;
+- Gili Kondo = East Lombok only, not with main Gilis. NEVER combine Pink Beach and Gili Kondo in the same day — too far apart (2hr10min between them). Always separate full days.`;
 
     const enforcedPrompt = `${lombokKnowledgeBase}
 
