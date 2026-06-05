@@ -39,7 +39,6 @@
     padding: 56px 32px 80px;
   }
 
-  /* HEADER */
   .planner-header { text-align: center; margin-bottom: 56px; }
 
   .planner-eyebrow {
@@ -83,7 +82,6 @@
     line-height: 1.75;
   }
 
-  /* PROGRESS */
   .progress-wrap { margin-bottom: 48px; }
 
   .progress-bar {
@@ -142,7 +140,6 @@
 
   .progress-label.active { opacity: 1; color: var(--forest); font-weight: 700; }
 
-  /* QUESTIONS */
   .question-screen { display: none; animation: fadeUp 0.4s ease forwards; }
   .question-screen.active { display: block; }
 
@@ -228,7 +225,6 @@
     line-height: 1.5;
   }
 
-  /* NAV */
   .question-nav { display: flex; justify-content: center; gap: 14px; margin-top: 8px; }
 
   .btn-back {
@@ -288,7 +284,6 @@
   .btn-generate.ready { opacity: 1; pointer-events: all; }
   .btn-generate.ready:hover { background: #D4A020; transform: translateY(-1px); }
 
-  /* LOADING */
   .loading-screen { display: none; text-align: center; padding: 80px 20px; }
   .loading-screen.active { display: block; }
 
@@ -326,7 +321,6 @@
 
   .loading-step.visible { opacity: 1; }
 
-  /* RESULTS */
   .results-screen { display: none; animation: fadeUp 0.5s ease forwards; }
   .results-screen.active { display: block; }
 
@@ -381,7 +375,6 @@
     border-radius: 2px;
   }
 
-  /* DAY CARDS */
   .itinerary-section { margin-bottom: 36px; }
 
   .itinerary-section h2 {
@@ -430,7 +423,6 @@
     border-radius: 2px;
   }
 
-  /* PRACTICAL */
   .practical-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -475,7 +467,6 @@
 
   .practical-link:hover { background: #EAD99A; }
 
-  /* ECOSYSTEM CARDS */
   .ecosystem-section { margin-bottom: 28px; }
 
   .ecosystem-section h2 {
@@ -556,7 +547,6 @@
 
   .ecosystem-card:hover .ecosystem-card-btn { background: #D4A020; }
 
-  /* AFFILIATE BAR */
   .affiliate-bar {
     background: var(--forest);
     border-left: 4px solid var(--gold);
@@ -591,7 +581,6 @@
 
   .affiliate-btn:hover { background: #D4A020; }
 
-  /* SHARE */
   .share-bar {
     background: var(--cream-dark);
     border: 1px solid var(--border);
@@ -664,14 +653,12 @@
 <body>
 <div class="planner">
 
-  <!-- HEADER -->
   <div class="planner-header">
     <p class="planner-eyebrow">Discover Lombok &nbsp;/&nbsp; Plan Your Trip</p>
     <h1>Your Personal <em>Lombok</em> Itinerary</h1>
     <p>Answer five quick questions and our AI planner builds a personalised day-by-day itinerary matched exactly to how you want to travel, complete with accommodation, experiences, and booking links.</p>
   </div>
 
-  <!-- PROGRESS -->
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-bar">
       <div class="progress-step active" id="step1">1</div>
@@ -815,7 +802,7 @@
       <button class="option-btn" onclick="selectOption('arrival','already',this)">
         <span class="option-icon">📍</span>
         <div class="option-title">Already on Lombok</div>
-        <div class="option-desc">Planning what to do next from here</div>
+        <div class="option-desc">Based in Kuta — planning what to explore next</div>
       </button>
     </div>
     <div class="question-nav">
@@ -953,9 +940,9 @@
     };
 
     const arrivalMap = {
-      bali: 'arriving from Bali, either by fast boat to the Gili Islands or by short flight to Lombok International Airport (LOP)',
-      flight: 'flying direct into Lombok International Airport (LOP) near Praya in central-south Lombok',
-      already: 'already on Lombok and planning their onward journey around the island'
+      bali: 'arriving from Bali, either by fast boat to the Gili Islands or by short flight to Lombok International Airport (LOP). Day 1 should include the journey from Bali and settling into their base.',
+      flight: 'flying direct into Lombok International Airport (LOP) near Praya in central-south Lombok. Day 1 should include airport arrival, transfer to their base (approximately 25 minutes to Kuta Lombok), and an easy first afternoon.',
+      already: 'ALREADY BASED IN KUTA LOMBOK. They are already on the island and settled. DO NOT include any arrival day, airport transfers, flights, or journey to Lombok. Day 1 starts immediately in Kuta Lombok with a full day of activities — treat them as locals who are ready to explore from the moment they wake up.'
     };
 
     const budgetMap = {
@@ -964,7 +951,11 @@
       premium: 'premium travel: private villas, fine dining, private boat charters, and personal drivers'
     };
 
-    const prompt = `You are the expert travel planner for Discover Lombok (discoverlombok.com), a premium Indonesian travel guide. Create a highly personalised ${answers.length}-day Lombok itinerary for ${partyMap[answers.party]}, focused on ${styleMap[answers.style]}, ${arrivalMap[answers.arrival]}, travelling on a ${budgetMap[answers.budget]} basis.
+    const alreadyOnLombokNote = answers.arrival === 'already'
+      ? '\n\nCRITICAL: This traveller is already based in Kuta Lombok. Day 1 must start with a full day of exploration from Kuta — NO airport, NO arrival logistics, NO journey to Lombok. Jump straight into the adventure.'
+      : '';
+
+    const prompt = `You are the expert travel planner for Discover Lombok (discoverlombok.com), a premium Indonesian travel guide. Create a highly personalised ${answers.length}-day Lombok itinerary for ${partyMap[answers.party]}, focused on ${styleMap[answers.style]}, ${arrivalMap[answers.arrival]}, travelling on a ${budgetMap[answers.budget]} basis.${alreadyOnLombokNote}
 
 Use EXACTLY these section markers in your response:
 
@@ -1019,20 +1010,17 @@ Be specific, warm, and authoritative. No generic travel advice. Every recommenda
     document.getElementById('loadingScreen').classList.remove('active');
     document.getElementById('resultsScreen').classList.add('active');
 
-    // Title
     const nameMatch = text.match(/ITINERARY_NAME:\s*(.+)/);
     const name = nameMatch ? nameMatch[1].trim() : 'Your Lombok Itinerary';
     const words = name.split(' ');
     const mid = Math.ceil(words.length / 2);
     document.getElementById('itineraryTitle').innerHTML = words.slice(0,mid).join(' ') + ' <em>' + words.slice(mid).join(' ') + '</em>';
 
-    // Tags
     const tagsMatch = text.match(/SUMMARY_TAGS:\s*(.+)/);
     if (tagsMatch) {
       document.getElementById('summaryTags').innerHTML = tagsMatch[1].split('|').map(t => `<span class="summary-tag">${t.trim()}</span>`).join('');
     }
 
-    // Days
     const dayMatches = [...text.matchAll(/DAY_START([\s\S]*?)DAY_END/g)];
     let daysHtml = '<h2>Your Day by Day Itinerary</h2>';
     dayMatches.forEach(m => {
@@ -1046,7 +1034,6 @@ Be specific, warm, and authoritative. No generic travel advice. Every recommenda
     });
     document.getElementById('itineraryDays').innerHTML = daysHtml;
 
-    // Practical
     const pTitle = (text.match(/PRACTICAL_TITLE:\s*(.+)/) || [])[1] || 'Getting Around';
     const pContent = (text.match(/PRACTICAL_CONTENT:\s*([\s\S]*?)(?=ACCOMMODATION_TITLE)/) || [])[1] || '';
     const aTitle = (text.match(/ACCOMMODATION_TITLE:\s*(.+)/) || [])[1] || 'Where to Stay';
@@ -1058,102 +1045,42 @@ Be specific, warm, and authoritative. No generic travel advice. Every recommenda
 
     document.getElementById('practicalSection').innerHTML = `
       <div class="practical-grid">
-        <div class="practical-card">
-          <h3>${pTitle.trim()}</h3>
-          <p>${pContent.trim()}</p>
-        </div>
-        <div class="practical-card">
-          <h3>${aTitle.trim()}</h3>
-          <p>${aContent.trim()}</p>
-          <a class="practical-link" href="https://www.lombokstays.com" target="_blank" rel="noopener">Search LombokStays →</a>
-        </div>
-        <div class="practical-card">
-          <h3>${fTitle.trim()}</h3>
-          <p>${fContent.trim()}</p>
-          <a class="practical-link" href="https://www.discoverlombok.com/post/best-food-in-lombok" target="_blank" rel="noopener">Read the Lombok Food Guide →</a>
-        </div>
-        <div class="practical-card">
-          <h3>${tTitle.trim()}</h3>
-          <p>${tContent.trim()}</p>
-        </div>
+        <div class="practical-card"><h3>${pTitle.trim()}</h3><p>${pContent.trim()}</p></div>
+        <div class="practical-card"><h3>${aTitle.trim()}</h3><p>${aContent.trim()}</p><a class="practical-link" href="https://www.lombokstays.com" target="_blank" rel="noopener">Search LombokStays →</a></div>
+        <div class="practical-card"><h3>${fTitle.trim()}</h3><p>${fContent.trim()}</p><a class="practical-link" href="https://www.discoverlombok.com/post/best-food-in-lombok" target="_blank" rel="noopener">Read the Lombok Food Guide →</a></div>
+        <div class="practical-card"><h3>${tTitle.trim()}</h3><p>${tContent.trim()}</p></div>
       </div>`;
 
-    // Ecosystem cards - contextual based on answers
     let ecoCards = '';
 
     if (answers.style === 'surf' || answers.style === 'mix') {
-      ecoCards += `
-        <a class="ecosystem-card" href="https://www.discoverlombok.com/post/where-to-surf-in-lombok" target="_blank" rel="noopener">
-          <p class="ecosystem-card-eyebrow">Surf Guide</p>
-          <h3>Surfing in Lombok</h3>
-          <p>The complete guide to every break on the island, from beginner-friendly Selong Belanak to the world-class barrel at Desert Point.</p>
-          <span class="ecosystem-card-btn">Explore Surf Guide →</span>
-        </a>`;
+      ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/post/where-to-surf-in-lombok" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Surf Guide</p><h3>Surfing in Lombok</h3><p>The complete guide to every break on the island, from beginner-friendly Selong Belanak to the world-class barrel at Desert Point.</p><span class="ecosystem-card-btn">Explore Surf Guide →</span></a>`;
     }
 
     if (answers.style === 'snorkel' || answers.style === 'mix' || answers.style === 'relax') {
-      ecoCards += `
-        <a class="ecosystem-card" href="https://www.giliboattours.com" target="_blank" rel="noopener">
-          <p class="ecosystem-card-eyebrow">Island Transfers</p>
-          <h3>Gili Boat Tours</h3>
-          <p>Fast boats and private charters to the Gili Islands and beyond. Daily departures from multiple Lombok points.</p>
-          <span class="ecosystem-card-btn">Book Your Transfer →</span>
-        </a>`;
+      ecoCards += `<a class="ecosystem-card" href="https://www.giliboattours.com" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Island Transfers</p><h3>Gili Boat Tours</h3><p>Fast boats and private charters to the Gili Islands and beyond. Daily departures from multiple Lombok points.</p><span class="ecosystem-card-btn">Book Your Transfer →</span></a>`;
     }
 
     if (answers.style === 'culture' || answers.style === 'mix') {
-      ecoCards += `
-        <a class="ecosystem-card" href="https://www.discoverlombok.com/post/tetebatu-lombok" target="_blank" rel="noopener">
-          <p class="ecosystem-card-eyebrow">Destination Guide</p>
-          <h3>Tetebatu Guide</h3>
-          <p>Rice terraces, jungle waterfalls, and the green heart of Lombok. Everything you need to plan your highland stay.</p>
-          <span class="ecosystem-card-btn">Read the Guide →</span>
-        </a>`;
+      ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/post/tetebatu-lombok" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Destination Guide</p><h3>Tetebatu Guide</h3><p>Rice terraces, jungle waterfalls, and the green heart of Lombok. Everything you need to plan your highland stay.</p><span class="ecosystem-card-btn">Read the Guide →</span></a>`;
     }
 
     if (answers.arrival === 'bali' || answers.arrival === 'flight') {
-      ecoCards += `
-        <a class="ecosystem-card" href="https://www.discoverlombok.com/flights-to-lombok" target="_blank" rel="noopener">
-          <p class="ecosystem-card-eyebrow">Flights & Transport</p>
-          <h3>Lombok Flights</h3>
-          <p>Find the best flights to Lombok from Bali, Jakarta, and beyond. Routes, airlines, and booking tips in one place.</p>
-          <span class="ecosystem-card-btn">Find Flights →</span>
-        </a>`;
+      ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/flights-to-lombok" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Flights & Transport</p><h3>Lombok Flights</h3><p>Find the best flights to Lombok from Bali, Jakarta, and beyond. Routes, airlines, and booking tips in one place.</p><span class="ecosystem-card-btn">Find Flights →</span></a>`;
     }
 
-    ecoCards += `
-      <a class="ecosystem-card" href="https://www.lombokstays.com" target="_blank" rel="noopener">
-        <p class="ecosystem-card-eyebrow">${answers.budget === 'premium' ? 'Villas & Resorts' : answers.budget === 'mid' ? 'Boutique Hotels' : 'Guesthouses & Stays'}</p>
-        <h3>LombokStays</h3>
-        <p>${answers.budget === 'premium' ? 'Curated private villas and luxury resorts across Lombok and the Gili Islands.' : answers.budget === 'mid' ? 'Handpicked boutique hotels and comfortable stays matched to your itinerary.' : 'The best budget guesthouses and local stays across every region of Lombok.'}</p>
-        <span class="ecosystem-card-btn">${answers.party === 'couple' ? 'Find Romantic Stays →' : answers.party === 'family' ? 'Find Family Stays →' : answers.party === 'friends' ? 'Find Group Stays →' : 'Browse Stays →'}</span>
-      </a>`;
+    ecoCards += `<a class="ecosystem-card" href="https://www.lombokstays.com" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">${answers.budget === 'premium' ? 'Villas & Resorts' : answers.budget === 'mid' ? 'Boutique Hotels' : 'Guesthouses & Stays'}</p><h3>LombokStays</h3><p>${answers.budget === 'premium' ? 'Curated private villas and luxury resorts across Lombok and the Gili Islands.' : answers.budget === 'mid' ? 'Handpicked boutique hotels and comfortable stays matched to your itinerary.' : 'The best budget guesthouses and local stays across every region of Lombok.'}</p><span class="ecosystem-card-btn">${answers.party === 'couple' ? 'Find Romantic Stays →' : answers.party === 'family' ? 'Find Family Stays →' : answers.party === 'friends' ? 'Find Group Stays →' : 'Browse Stays →'}</span></a>`;
 
-    ecoCards += `
-      <a class="ecosystem-card" href="https://www.discoverlombok.com/destinations" target="_blank" rel="noopener">
-        <p class="ecosystem-card-eyebrow">Beach Guide</p>
-        <h3>Lombok Beaches</h3>
-        <p>Every beach on the island, ranked and reviewed. Find the perfect beach for your travel style and the days in your itinerary.</p>
-        <span class="ecosystem-card-btn">Explore Beaches →</span>
-      </a>`;
+    ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/destinations" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Beach Guide</p><h3>Lombok Beaches</h3><p>Every beach on the island, ranked and reviewed. Find the perfect beach for your travel style and the days in your itinerary.</p><span class="ecosystem-card-btn">Explore Beaches →</span></a>`;
 
     if (ecoCards) {
       document.getElementById('ecosystemSection').innerHTML = `<h2>Plan &amp; Book Your Trip</h2><div class="ecosystem-grid">${ecoCards}</div>`;
     }
 
-    // Universal affiliate bars
-    let affHtml = `
-      <div class="affiliate-bar">
-        <p><strong>Stay connected from day one.</strong> Get an Indonesian eSIM before you fly, it activates on arrival and keeps maps, Grab, and messaging working across the whole island.</p>
-        <a class="affiliate-btn" href="https://www.airalo.com" target="_blank" rel="noopener">Get Your eSIM →</a>
-      </div>`;
+    let affHtml = `<div class="affiliate-bar"><p><strong>Stay connected from day one.</strong> Get an Indonesian eSIM before you fly, it activates on arrival and keeps maps, Grab, and messaging working across the whole island.</p><a class="affiliate-btn" href="https://www.airalo.com" target="_blank" rel="noopener">Get Your eSIM →</a></div>`;
 
     if (answers.style === 'surf' || answers.style === 'mix') {
-      affHtml += `
-        <div class="affiliate-bar">
-          <p><strong>Heading to Gerupuk or the Gilis?</strong> Book your boat transfers and surf excursions with Gili Boat Tours, departing daily from Kuta and the south coast.</p>
-          <a class="affiliate-btn" href="https://www.giliboattours.com" target="_blank" rel="noopener">Book Boat Tours →</a>
-        </div>`;
+      affHtml += `<div class="affiliate-bar"><p><strong>Heading to Gerupuk or the Gilis?</strong> Book your boat transfers and surf excursions with Gili Boat Tours, departing daily from Kuta and the south coast.</p><a class="affiliate-btn" href="https://www.giliboattours.com" target="_blank" rel="noopener">Book Boat Tours →</a></div>`;
     }
 
     document.getElementById('affiliateSection').innerHTML = affHtml;
