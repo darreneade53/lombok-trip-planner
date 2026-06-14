@@ -32,9 +32,10 @@ exports.handler = async function(event) {
 SOUTH LOMBOK:
 - Kuta = main hub. All budgets. Restaurants/bars in town (2min from beach, NO beachside dining). Spas, scooter hire. No boats to Gilis from Kuta.
 - Selong Belanak = 30min from Kuta. Villas (mid-luxury). Beginner surf lessons. Flat bay, no cliffs, no freediving.
-- Tanjung Aan = 10min from Kuta. Day trip only, NO accommodation. 2 beach clubs. Resort under construction. BUKIT MERESE hill above = best sunset in South Lombok — always recommend for afternoon visits.
+- Tanjung Aan = 10min from Kuta. IMPORTANT: Tanjung Aan is 40mins from Selong Belanak, NOT 10mins. Only quote the 10min distance when the traveller is based in Kuta. If they are at Selong Belanak, the distance to Tanjung Aan is 40mins. Day trip only, NO accommodation. 2 beach clubs. Resort under construction. BUKIT MERESE hill above = best sunset in South Lombok — always recommend for afternoon visits.
 - Mawun = 20-25min from Kuta. Day trip only, NO accommodation. Bay with 2 headlands (not cliffs). Warungs only.
-- Gerupuk = 15min from Kuta. Surf camps and warungs only (NO beach clubs). Boat out to breaks.
+- Gerupuk = 15min from Kuta. Surf camps and warungs only (NO beach clubs). Boat out to breaks. Gerupuk is EAST of Kuta.
+- Desert Point = far South West of Lombok, opposite side of the island from Gerupuk. NEVER combine Gerupuk and Desert Point in the same day, they are on completely opposite sides of the island. Each requires a separate full day trip.
 - Torok = 40min from Kuta. Quiet beach, day trip.
 - Ekas = 1hr15min from Kuta. Remote surf.
 - Pink Beach = 1hr30min from Kuta (East Lombok). Day trip. Good snorkelling.
@@ -81,7 +82,7 @@ HARD RULES:
 
 ${prompt}
 
-IMPORTANT: Cover ALL ${dayCount} days — Day 1 through Day ${dayCount}. Max 3 sentences per day. Do not skip or summarise days. After Day ${dayCount} add practical tips (4 bullets max) and ecosystem cards. Stay under 1600 tokens total. Never contradict the facts above.`;
+IMPORTANT: Cover ALL ${dayCount} days — Day 1 through Day ${dayCount}. Max 3 sentences per day. Do not skip or summarise days. After Day ${dayCount} add practical tips (4 bullets max) and ecosystem cards. Stay under 1600 tokens total. Never contradict the facts above. Never use em dashes in your response, use commas instead.`;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
