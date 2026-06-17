@@ -30,9 +30,9 @@ exports.handler = async function(event) {
     const lombokKnowledgeBase = `LOMBOK FACTS — never contradict these.
 
 SOUTH LOMBOK:
-- Kuta = main hub. All budgets. Restaurants/bars in town (2min from beach, NO beachside dining). Spas, scooter hire. No boats to Gilis from Kuta.
-- Selong Belanak = 30min from Kuta. Villas (mid-luxury) available if staying overnight there. Beginner surf lessons. Flat bay, no cliffs, no freediving. IMPORTANT: If the traveller is based in Kuta, Selong Belanak is a day trip only, do NOT suggest relaxing at a villa there or staying overnight unless the itinerary specifically moves their base to Selong Belanak.
-- Tanjung Aan = 10min from Kuta. IMPORTANT: Tanjung Aan is 40mins from Selong Belanak, NOT 10mins. Only quote the 10min distance when the traveller is based in Kuta. If they are at Selong Belanak, the distance to Tanjung Aan is 40mins. Day trip only, NO accommodation. 2 beach clubs. Resort under construction. BUKIT MERESE hill above = best sunset in South Lombok — always recommend for afternoon visits.
+- Kuta = main hub. All budgets. Restaurants/bars in town (2-5 mins from the beach, NOT beachside). No beachside hotels or beach bars in Kuta. Spas, scooter hire. No boats to Gilis from Kuta.
+- Selong Belanak = 30min from Kuta. Selong Belanak is WEST of Kuta, not south. Villas (mid-luxury) available if staying overnight there. Beginner surf lessons. Flat bay, no cliffs, no freediving. IMPORTANT: If the traveller is based in Kuta, Selong Belanak is a day trip only, do NOT suggest relaxing at a villa there or staying overnight unless the itinerary specifically moves their base to Selong Belanak.
+- Tanjung Aan = 10min from Kuta. IMPORTANT: Tanjung Aan is 40mins from Selong Belanak, NOT 10mins. Only quote the 10min distance when the traveller is based in Kuta. If they are at Selong Belanak, the distance to Tanjung Aan is 40mins. Day trip only, NO accommodation. 2 approximately 1 beach club and a few local warungs. Resort under construction. BUKIT MERESE hill above = best sunset in South Lombok — always recommend for afternoon visits.
 - Mawun = 20-25min from Kuta. Day trip only, NO accommodation. Bay with 2 headlands (not cliffs). Warungs only.
 - Gerupuk = 15min from Kuta. Surf camps and warungs only (NO beach clubs). Boat out to breaks. Gerupuk is EAST of Kuta.
 - Desert Point = far South West of Lombok, opposite side of the island from Gerupuk. NEVER combine Gerupuk and Desert Point in the same day, they are on completely opposite sides of the island. Each requires a separate full day trip.
@@ -46,6 +46,7 @@ GILI ISLANDS — order closest to mainland: Air → Meno (10min) → Trawangan (
 - Gili Meno = quietest, wellness, honeymoons.
 - Gili T = party island, live music, social.
 - TO GET THERE: Drive to Teluk Nare (1hr40 from Kuta) or Bangsal (1hr50 from Kuta). Fast boat 15-20min to Gili T. NEVER suggest boat from Kuta direct.
+- BOAT TIMING WARNING: Fast boats between Gili T and the mainland (Teluk Nare/Bangsal) do not run late in the evening. Last boats typically depart in the late afternoon. Never suggest returning from Gili T to the mainland in the evening, always plan returns in the afternoon.
 
 GILI KONDO = NE Lombok, opposite side from main Gilis. Day trip from East/Central Lombok only.
 
@@ -57,7 +58,7 @@ TETEBATU (Central):
 NORTH LOMBOK / SENARU:
 - 3hrs from Kuta. Guesthouses/homestays/cabins only (no hotels).
 - Rinjani trekking base (2-4 days).
-- Tiu Kelep waterfall = 5min from Senaru. Always combine these.
+- Tiu Kelep waterfall = 5min drive from Senaru, then a 30-45 minute hike to reach the waterfall. Always combine with a Senaru stay.
 - Sembalun = 50min from Senaru. Alternative Rinjani approach, valley scenery.
 
 WEST LOMBOK / SENGGIGI:
