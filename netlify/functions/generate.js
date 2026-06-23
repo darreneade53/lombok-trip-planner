@@ -19,8 +19,6 @@ exports.handler = async function(event) {
     const { prompt } = JSON.parse(event.body);
 
     // FIXED day count detection — handles "7-day", "7 day", "7days", "7 days" etc.
-    // \s* only matched whitespace, missed the hyphen used in "${answers.length}-day"
-    // [\s-]* matches whitespace OR a hyphen OR nothing between the number and "day"
     let dayCount = 3;
     if (/\b10\+?[\s-]*days?\b/i.test(prompt) || /\bten[\s-]*days?\b/i.test(prompt)) {
       dayCount = 10;
@@ -39,8 +37,8 @@ SOUTH LOMBOK:
 - Selong Belanak = 30min from Kuta. Selong Belanak is WEST of Kuta, not south. Villas (mid-luxury) available if staying overnight there. Beginner surf lessons. Flat bay, no cliffs, no freediving. IMPORTANT: If the traveller is based in Kuta, Selong Belanak is a day trip only, do NOT suggest relaxing at a villa there or staying overnight unless the itinerary specifically moves their base to Selong Belanak.
 - Tanjung Aan = 10min from Kuta. IMPORTANT: Tanjung Aan is 40mins from Selong Belanak, NOT 10mins. Only quote the 10min distance when the traveller is based in Kuta. If they are at Selong Belanak, the distance to Tanjung Aan is 40mins. Day trip only, NO accommodation. Approximately 1 beach club and a few local warungs. Resort under construction. BUKIT MERESE hill above = best sunset in South Lombok, always recommend for afternoon visits.
 - Mawun = 20-25min from Kuta. Day trip only, NO accommodation. Bay with 2 headlands (not cliffs). Warungs only.
-- Gerupuk = 15min from Kuta. Surf camps and warungs only (NO beach clubs). Boat out to breaks. Gerupuk is EAST of Kuta.
-- Desert Point = far South West of Lombok, opposite side of the island from Gerupuk. NEVER combine Gerupuk and Desert Point in the same day, they are on completely opposite sides of the island. Each requires a separate full day trip.
+- Gerupuk = 15min from Kuta. Surf camps and warungs only (NO beach clubs). Boat out to LOCAL Gerupuk bay breaks only. Gerupuk is EAST of Kuta. IMPORTANT: Do NOT name Bangko-Bangko as a Gerupuk break, Bangko-Bangko is a completely different location on the opposite side of the island, see Desert Point below. Do NOT mention a break called "Periscope" or "Periscopes" under any circumstances, this break does not exist in Lombok, it is in Sumbawa, a different island entirely.
+- Desert Point = far South West of Lombok, opposite side of the island from Gerupuk. Also known locally as BANGKO-BANGKO, this is the correct and only name/location pairing, Bangko-Bangko IS Desert Point, located South West, never East near Gerupuk. NEVER combine Gerupuk and Desert Point/Bangko-Bangko in the same day, they are on completely opposite sides of the island. Each requires a separate full day trip.
 - Torok = 40min from Kuta. Quiet beach, day trip.
 - Ekas = 1hr15min from Kuta. Remote surf.
 - Pink Beach = 1hr30min from Kuta (East Lombok). Day trip. Good snorkelling.
@@ -56,9 +54,10 @@ GILI ISLANDS (the main three: Air, Meno, Trawangan) — MUST BE AN OVERNIGHT STA
 - BOAT TIMING NOTE: This only matters for SAME-DAY return trips without an overnight stay. If the traveller is staying overnight on the Gilis, there is no need to rush back, they can enjoy sunset drinks and dinner at leisure and simply catch a boat the following day or whenever their stay ends. Only enforce an afternoon return cutoff if no overnight Gili stay is included in the itinerary.
 
 SECRET GILI (Gili Sudak / Gili Nanggu area, South West Lombok):
-- A more convenient and accessible alternative to Gili Kondo for couples or travellers based in Kuta wanting a quieter island/reef experience without committing to the long East Lombok travel day.
-- Reachable from the Kuta area south west coast, much shorter travel time than Kondo Beach.
-- PREFER recommending Secret Gili over Gili Kondo as the default day trip snorkelling option for travellers based in Kuta, unless the itinerary is specifically a multi-day East Lombok exploration.
+- A quieter, less crowded reef and snorkelling day trip option for travellers based in Kuta.
+- Kuta to the Secret Gili boat departure point is approximately 1hr30min by road (NOT 45 minutes), then a short boat crossing to the islands themselves.
+- IMPORTANT: Secret Gili and Gili Kondo are two separate, unrelated day trip destinations in different parts of the island. Do NOT compare their travel times to each other or frame one as an alternative to the other within the same day description. Mention only the one that is actually relevant to the itinerary being built, never both together as a comparison.
+- Suitable as a quieter, more accessible reef day trip alternative for travellers based in Kuta who are not doing a dedicated East Lombok multi-day route.
 
 GILI KONDO = NE Lombok, opposite side from main Gilis (Air/Meno/Trawangan). One of the best reef and freediving spots in Lombok, comparable in quality to the main Gilis, but the round trip from Kuta is approximately 5 hours of driving alone in a single day.
 - MANDATORY RULE: If Gili Kondo is recommended, the itinerary MUST include an overnight stay on the East Coast (near Kondo Beach or Pink Beach) to break up the journey. NEVER present Gili Kondo as a single day round trip from Kuta, the travel time alone makes this an exhausting and impractical day. Structure it as: travel to East Lombok and stay overnight, visit Gili Kondo and/or Pink Beach across that stay, then return to Kuta.
@@ -80,14 +79,15 @@ WEST LOMBOK / SENGGIGI:
 - Teluk Nare = 35min from Senggigi. Fast boat departure point for Gilis.
 - Mataram (capital) = 30min from Senggigi, 1hr from Kuta. Not a tourist destination.
 
-KEY DISTANCES FROM KUTA: Airport 25min, Tanjung Aan 10min, Gerupuk 15min, Mawun 20-25min, Torok 40min, Selong Belanak 30min, Ekas 1hr15, Pink Beach 1hr30, Tetebatu 1hr30, Mataram 1hr, Senggigi 1hr25, Teluk Nare 1hr40, Bangsal 1hr50, Senaru 3hrs, Kondo Beach 2hr20.
+KEY DISTANCES FROM KUTA: Airport 25min, Tanjung Aan 10min, Gerupuk 15min, Mawun 20-25min, Torok 40min, Selong Belanak 30min, Ekas 1hr15, Pink Beach 1hr30, Tetebatu 1hr30, Mataram 1hr, Senggigi 1hr25, Teluk Nare 1hr40, Bangsal 1hr50, Senaru 3hrs, Kondo Beach 2hr20, Secret Gili departure point 1hr30.
 FROM AIRPORT: Kuta 25min, Senggigi 1hr5, Bangsal/Teluk Nare 1hr20.
 
 HARD RULES:
 - No boats Kuta to Gilis. Always Teluk Nare or Bangsal.
 - The main Gili Islands (Air, Meno, Trawangan) must be visited as an overnight stay (1-2 nights), never as repeated separate day trips from Kuta.
 - No rushed evening boat return rule applies only to same-day Gili trips with no overnight stay. Overnight Gili stays have no return time pressure.
-- Prefer Secret Gili over Gili Kondo as the default quick reef day trip from Kuta.
+- Secret Gili is approximately 1hr30min from Kuta to the departure point, never describe it as 45 minutes.
+- Never compare Secret Gili and Gili Kondo travel times against each other in the same day description, they are unrelated separate destinations.
 - If Gili Kondo is recommended, it must come with a mandatory overnight stay on the East Coast, never a single day round trip from Kuta.
 - No accommodation at Tanjung Aan or Mawun.
 - If based in Kuta, never suggest staying or relaxing at a villa in Selong Belanak, it is a day trip only.
@@ -96,7 +96,9 @@ HARD RULES:
 - No freediving at Selong Belanak, surf lessons only.
 - Never suggest Tiu Kelep from Tetebatu, pair with Senaru.
 - Always recommend Bukit Merese for sunset at Tanjung Aan.
-- Gili Kondo is East Lombok only, never grouped with the main Gilis, and never combined with Pink Beach in the same single day (2hr10min apart).`;
+- Gili Kondo is East Lombok only, never grouped with the main Gilis, and never combined with Pink Beach in the same single day (2hr10min apart).
+- Bangko-Bangko IS Desert Point, located South West Lombok. NEVER name Bangko-Bangko as a break near Gerupuk, which is East of Kuta. These are opposite sides of the island.
+- NEVER mention a surf break called "Periscope" or "Periscopes" anywhere in any itinerary, it does not exist in Lombok, it is located in Sumbawa, a separate island.`;
 
     const enforcedPrompt = `${lombokKnowledgeBase}
 
