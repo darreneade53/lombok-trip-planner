@@ -16,34 +16,27 @@ exports.handler = async function(event) {
   }
 
   try {
-    const { prompt, dayCount: requestedDayCount } = JSON.parse(event.body);
+    const { prompt } = JSON.parse(event.body);
 
-    // PRIMARY: trust the explicit dayCount field sent by the front end.
-    // FALLBACK: only used if dayCount is missing/invalid, e.g. an older client.
+    // FIXED day count detection — handles "7-day", "7 day", "7days", "7 days" etc.
     let dayCount = 3;
-    const validCounts = [3, 5, 7, 10];
-    if (typeof requestedDayCount === 'number' && validCounts.includes(requestedDayCount)) {
-      dayCount = requestedDayCount;
-    } else {
-      console.warn('dayCount missing or invalid from client, falling back to regex parsing of prompt text');
-      if (/\b10\+?[\s-]*days?\b/i.test(prompt) || /\bten[\s-]*days?\b/i.test(prompt)) {
-        dayCount = 10;
-      } else if (/\b7[\s-]*days?\b/i.test(prompt) || /\bseven[\s-]*days?\b/i.test(prompt)) {
-        dayCount = 7;
-      } else if (/\b5[\s-]*days?\b/i.test(prompt) || /\bfive[\s-]*days?\b/i.test(prompt)) {
-        dayCount = 5;
-      } else if (/\b3[\s-]*days?\b/i.test(prompt) || /\bthree[\s-]*days?\b/i.test(prompt)) {
-        dayCount = 3;
-      }
+    if (/\b10\+?[\s-]*days?\b/i.test(prompt) || /\bten[\s-]*days?\b/i.test(prompt)) {
+      dayCount = 10;
+    } else if (/\b7[\s-]*days?\b/i.test(prompt) || /\bseven[\s-]*days?\b/i.test(prompt)) {
+      dayCount = 7;
+    } else if (/\b5[\s-]*days?\b/i.test(prompt) || /\bfive[\s-]*days?\b/i.test(prompt)) {
+      dayCount = 5;
+    } else if (/\b3[\s-]*days?\b/i.test(prompt) || /\bthree[\s-]*days?\b/i.test(prompt)) {
+      dayCount = 3;
     }
 
     const lombokKnowledgeBase = `LOMBOK FACTS — never contradict these.
 
 SOUTH LOMBOK:
-- Kuta = main hub. All budgets. Excellent restaurant and bar scene in Kuta town, a 2-5 minute walk from most accommodation. NEVER use the word "beachfront" or "beachside" to describe any restaurant, bar, or dining venue in Kuta, none exist. Simply describe dining as being in Kuta town, or at a Kuta restaurant, with no reference to beach proximity at all. Spas, scooter hire. No boats to Gilis from Kuta.
+- Kuta = main hub. All budgets. Excellent restaurant and bar scene throughout Kuta town. NEVER use the word "beachfront" or "beachside" to describe any restaurant, bar, or dining venue in Kuta, none exist. Simply describe dining as being in Kuta town, or at a Kuta restaurant, with no reference to beach proximity at all. Do NOT repeat a specific walking time (such as 2-5 minutes) every time Kuta dining is mentioned, this becomes repetitive across an itinerary, vary the phrasing naturally or omit a specific time. Spas, scooter hire. No boats to Gilis from Kuta.
 - Selong Belanak = 30min from Kuta. Selong Belanak is WEST of Kuta, not south. Villas (mid-luxury) available if staying overnight there. Beginner surf lessons. Flat bay, no cliffs, no freediving. IMPORTANT: If the traveller is based in Kuta, Selong Belanak is a day trip only, do NOT suggest relaxing at a villa there or staying overnight unless the itinerary specifically moves their base to Selong Belanak.
 - Tanjung Aan = 10min from Kuta. IMPORTANT: Tanjung Aan is 40mins from Selong Belanak, NOT 10mins. Only quote the 10min distance when the traveller is based in Kuta. If they are at Selong Belanak, the distance to Tanjung Aan is 40mins. Day trip only, NO accommodation. Approximately 1 beach club and a few local warungs. Resort under construction. BUKIT MERESE hill above = best sunset in South Lombok, always recommend for afternoon visits.
-- Mawun = 20-25min from Kuta. Day trip only, NO accommodation. Bay with 2 headlands (not cliffs). Warungs only.
+- Mawun = 20-25min from Kuta. Mawun is WEST of Kuta, not south. Day trip only, NO accommodation. Bay with 2 headlands (not cliffs). Warungs only.
 - Gerupuk = 15min from Kuta. Surf camps and warungs only (NO beach clubs). Boat out to LOCAL Gerupuk bay breaks only. Gerupuk is EAST of Kuta. IMPORTANT: Do NOT name Bangko-Bangko as a Gerupuk break, Bangko-Bangko is a completely different location on the opposite side of the island, see Desert Point below. Do NOT mention a break called "Periscope" or "Periscopes" under any circumstances, this break does not exist in Lombok, it is in Sumbawa, a different island entirely.
 - Desert Point = far South West of Lombok, opposite side of the island from Gerupuk. Also known locally as BANGKO-BANGKO, this is the correct and only name/location pairing, Bangko-Bangko IS Desert Point, located South West, never East near Gerupuk. NEVER combine Gerupuk and Desert Point/Bangko-Bangko in the same day, they are on completely opposite sides of the island. Each requires a separate full day trip.
 - Torok = 40min from Kuta. Quiet beach, day trip.
