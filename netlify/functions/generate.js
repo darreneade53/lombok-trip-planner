@@ -16,18 +16,25 @@ exports.handler = async function(event) {
   }
 
   try {
-    const { prompt } = JSON.parse(event.body);
+    const { prompt, dayCount: requestedDayCount } = JSON.parse(event.body);
 
-    // FIXED day count detection — handles "7-day", "7 day", "7days", "7 days" etc.
+    // PRIMARY: trust the explicit dayCount field sent by the front end.
+    // FALLBACK: only used if dayCount is missing/invalid, e.g. an older client.
     let dayCount = 3;
-    if (/\b10\+?[\s-]*days?\b/i.test(prompt) || /\bten[\s-]*days?\b/i.test(prompt)) {
-      dayCount = 10;
-    } else if (/\b7[\s-]*days?\b/i.test(prompt) || /\bseven[\s-]*days?\b/i.test(prompt)) {
-      dayCount = 7;
-    } else if (/\b5[\s-]*days?\b/i.test(prompt) || /\bfive[\s-]*days?\b/i.test(prompt)) {
-      dayCount = 5;
-    } else if (/\b3[\s-]*days?\b/i.test(prompt) || /\bthree[\s-]*days?\b/i.test(prompt)) {
-      dayCount = 3;
+    const validCounts = [3, 5, 7, 10];
+    if (typeof requestedDayCount === 'number' && validCounts.includes(requestedDayCount)) {
+      dayCount = requestedDayCount;
+    } else {
+      console.warn('dayCount missing or invalid from client, falling back to regex parsing of prompt text');
+      if (/\b10\+?[\s-]*days?\b/i.test(prompt) || /\bten[\s-]*days?\b/i.test(prompt)) {
+        dayCount = 10;
+      } else if (/\b7[\s-]*days?\b/i.test(prompt) || /\bseven[\s-]*days?\b/i.test(prompt)) {
+        dayCount = 7;
+      } else if (/\b5[\s-]*days?\b/i.test(prompt) || /\bfive[\s-]*days?\b/i.test(prompt)) {
+        dayCount = 5;
+      } else if (/\b3[\s-]*days?\b/i.test(prompt) || /\bthree[\s-]*days?\b/i.test(prompt)) {
+        dayCount = 3;
+      }
     }
 
     const lombokKnowledgeBase = `LOMBOK FACTS — never contradict these.
