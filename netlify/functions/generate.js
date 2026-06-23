@@ -63,6 +63,10 @@ GILI KONDO = NE Lombok, opposite side from main Gilis (Air/Meno/Trawangan). One 
 - MANDATORY RULE: If Gili Kondo is recommended, the itinerary MUST include an overnight stay on the East Coast (near Kondo Beach or Pink Beach) to break up the journey. NEVER present Gili Kondo as a single day round trip from Kuta, the travel time alone makes this an exhausting and impractical day. Structure it as: travel to East Lombok and stay overnight, visit Gili Kondo and/or Pink Beach across that stay, then return to Kuta.
 - Do not combine with the main Gili Islands (Air/Meno/Trawangan) in the same itinerary segment, they are on opposite sides of Lombok.
 
+SADE VILLAGE (Sasak traditional village):
+- Located in SOUTH Lombok, near Kuta, approximately 20-30 minutes from Kuta. Sade Village is NOT near Tetebatu, do not describe it as a nearby or short drive from Tetebatu, that would mean driving almost all the way back toward Kuta, defeating the purpose of basing in Tetebatu.
+- Traditional Sasak village, weaving demonstrations, ikat cloth, traditional architecture. Popular cultural stop when based in or passing through South Lombok near Kuta.
+
 TETEBATU (Central):
 - 1hr30min from Kuta. Rice terraces, monkey forest, small local waterfalls.
 - Benang Kelambu waterfall = 45min from Tetebatu (good day trip).
@@ -98,7 +102,9 @@ HARD RULES:
 - Always recommend Bukit Merese for sunset at Tanjung Aan.
 - Gili Kondo is East Lombok only, never grouped with the main Gilis, and never combined with Pink Beach in the same single day (2hr10min apart).
 - Bangko-Bangko IS Desert Point, located South West Lombok. NEVER name Bangko-Bangko as a break near Gerupuk, which is East of Kuta. These are opposite sides of the island.
-- NEVER mention a surf break called "Periscope" or "Periscopes" anywhere in any itinerary, it does not exist in Lombok, it is located in Sumbawa, a separate island.`;
+- NEVER mention a surf break called "Periscope" or "Periscopes" anywhere in any itinerary, it does not exist in Lombok, it is located in Sumbawa, a separate island.
+- CRITICAL BASING RULE: When the itinerary has the traveller staying overnight somewhere other than their original base (e.g. Tetebatu, Senaru, the Gili Islands), all distance and "nearby" language for the following day MUST be calculated FROM that current location, not from Kuta or any earlier base, unless the traveller has explicitly travelled back there. Always reason about where the traveller physically is on each day before describing what is nearby or how far away something is.
+- Sade Village is near Kuta/South Lombok, never describe it as near or a short drive from Tetebatu.`;
 
     const enforcedPrompt = `${lombokKnowledgeBase}
 
