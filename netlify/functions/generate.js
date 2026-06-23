@@ -33,7 +33,7 @@ exports.handler = async function(event) {
     const lombokKnowledgeBase = `LOMBOK FACTS — never contradict these.
 
 SOUTH LOMBOK:
-- Kuta = main hub. All budgets. Restaurants/bars in town (2-5 mins from the beach, NOT beachside). No beachside hotels or beach bars in Kuta. Spas, scooter hire. No boats to Gilis from Kuta.
+- Kuta = main hub. All budgets. Excellent restaurant and bar scene in Kuta town, a 2-5 minute walk from most accommodation. NEVER use the word "beachfront" or "beachside" to describe any restaurant, bar, or dining venue in Kuta, none exist. Simply describe dining as being in Kuta town, or at a Kuta restaurant, with no reference to beach proximity at all. Spas, scooter hire. No boats to Gilis from Kuta.
 - Selong Belanak = 30min from Kuta. Selong Belanak is WEST of Kuta, not south. Villas (mid-luxury) available if staying overnight there. Beginner surf lessons. Flat bay, no cliffs, no freediving. IMPORTANT: If the traveller is based in Kuta, Selong Belanak is a day trip only, do NOT suggest relaxing at a villa there or staying overnight unless the itinerary specifically moves their base to Selong Belanak.
 - Tanjung Aan = 10min from Kuta. IMPORTANT: Tanjung Aan is 40mins from Selong Belanak, NOT 10mins. Only quote the 10min distance when the traveller is based in Kuta. If they are at Selong Belanak, the distance to Tanjung Aan is 40mins. Day trip only, NO accommodation. Approximately 1 beach club and a few local warungs. Resort under construction. BUKIT MERESE hill above = best sunset in South Lombok, always recommend for afternoon visits.
 - Mawun = 20-25min from Kuta. Day trip only, NO accommodation. Bay with 2 headlands (not cliffs). Warungs only.
