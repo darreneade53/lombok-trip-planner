@@ -18,16 +18,17 @@ exports.handler = async function(event) {
   try {
     const { prompt } = JSON.parse(event.body);
 
-    // FIXED day count detection — strict word-boundary matches, checked in order
-    // from most specific to least specific to avoid false positives like "25 minutes"
+    // FIXED day count detection — handles "7-day", "7 day", "7days", "7 days" etc.
+    // \s* only matched whitespace, missed the hyphen used in "${answers.length}-day"
+    // [\s-]* matches whitespace OR a hyphen OR nothing between the number and "day"
     let dayCount = 3;
-    if (/\b10\+?\s*days?\b/i.test(prompt) || /\bten\s*days?\b/i.test(prompt)) {
+    if (/\b10\+?[\s-]*days?\b/i.test(prompt) || /\bten[\s-]*days?\b/i.test(prompt)) {
       dayCount = 10;
-    } else if (/\b7\s*days?\b/i.test(prompt) || /\bseven\s*days?\b/i.test(prompt)) {
+    } else if (/\b7[\s-]*days?\b/i.test(prompt) || /\bseven[\s-]*days?\b/i.test(prompt)) {
       dayCount = 7;
-    } else if (/\b5\s*days?\b/i.test(prompt) || /\bfive\s*days?\b/i.test(prompt)) {
+    } else if (/\b5[\s-]*days?\b/i.test(prompt) || /\bfive[\s-]*days?\b/i.test(prompt)) {
       dayCount = 5;
-    } else if (/\b3\s*days?\b/i.test(prompt) || /\bthree\s*days?\b/i.test(prompt)) {
+    } else if (/\b3[\s-]*days?\b/i.test(prompt) || /\bthree[\s-]*days?\b/i.test(prompt)) {
       dayCount = 3;
     }
 
