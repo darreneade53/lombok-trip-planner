@@ -955,7 +955,11 @@
       ? '\n\nCRITICAL: This traveller is already based in Kuta Lombok. Day 1 must start with a full day of exploration from Kuta — NO airport, NO arrival logistics, NO journey to Lombok. Jump straight into the adventure.'
       : '';
 
-    const prompt = `You are the expert travel planner for Discover Lombok (discoverlombok.com), a premium Indonesian travel guide. Create a highly personalised ${answers.length}-day Lombok itinerary for ${partyMap[answers.party]}, focused on ${styleMap[answers.style]}, ${arrivalMap[answers.arrival]}, travelling on a ${budgetMap[answers.budget]} basis.${alreadyOnLombokNote}
+    const dayCount = parseInt(answers.length, 10);
+
+    const prompt = `You are the expert travel planner for Discover Lombok (discoverlombok.com), a premium Indonesian travel guide. Create a highly personalised ${dayCount}-day Lombok itinerary for ${partyMap[answers.party]}, focused on ${styleMap[answers.style]}, ${arrivalMap[answers.arrival]}, travelling on a ${budgetMap[answers.budget]} basis.${alreadyOnLombokNote}
+
+CRITICAL LENGTH RULE: The itinerary must contain EXACTLY ${dayCount} days, numbered Day 1 through Day ${dayCount}. Do not write more days, do not write fewer days, do not stop early, do not continue past Day ${dayCount} under any circumstances.
 
 Use EXACTLY these section markers in your response:
 
@@ -964,7 +968,7 @@ ITINERARY_NAME: [Creative evocative name, e.g. "The Seven-Day Surf and Soul Loop
 SUMMARY_TAGS: [Exactly 5 tags separated by | matching: trip length, main style, party type, budget, main regions]
 
 DAYS:
-Repeat this block for EVERY day:
+Repeat this block for EVERY day, from Day 1 to Day ${dayCount}, and then STOP:
 DAY_START
 DAY_NUMBER: Day [N]
 DAY_TITLE: [Short evocative title for the day]
@@ -990,7 +994,7 @@ Be specific, warm, and authoritative. No generic travel advice. Every recommenda
       const response = await fetch('/.netlify/functions/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
+        body: JSON.stringify({ prompt, dayCount: parseInt(answers.length, 10) })
       });
 
       const data = await response.json();
@@ -1021,7 +1025,7 @@ Be specific, warm, and authoritative. No generic travel advice. Every recommenda
       document.getElementById('summaryTags').innerHTML = tagsMatch[1].split('|').map(t => `<span class="summary-tag">${t.trim()}</span>`).join('');
     }
 
-    const dayMatches = [...text.matchAll(/DAY_START([\s\S]*?)DAY_END/g)];
+    const dayMatches = [...text.matchAll(/DAY_START([\s\S]*?)DAY_END/g)].slice(0, parseInt(answers.length, 10));
     let daysHtml = '<h2>Your Day by Day Itinerary</h2>';
     dayMatches.forEach(m => {
       const b = m[1];
