@@ -1069,13 +1069,9 @@ Be specific, warm, and authoritative. No generic travel advice. Every recommenda
       ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/post/tetebatu-lombok" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Destination Guide</p><h3>Tetebatu Guide</h3><p>Rice terraces, jungle waterfalls, and the green heart of Lombok. Everything you need to plan your highland stay.</p><span class="ecosystem-card-btn">Read the Guide →</span></a>`;
     }
 
-    if (answers.arrival === 'bali' || answers.arrival === 'flight') {
-      ecoCards += `<a class="ecosystem-card" href="https://www.lombokflights.com" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Flights & Transport</p><h3>Lombok Flights</h3><p>Find the best flights to Lombok from Bali, Jakarta, and beyond. Routes, airlines, and booking tips in one place.</p><span class="ecosystem-card-btn">Find Flights →</span></a>`;
-    }
-
     ecoCards += `<a class="ecosystem-card" href="https://www.lombokstays.com" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">${answers.budget === 'premium' ? 'Villas & Resorts' : answers.budget === 'mid' ? 'Boutique Hotels' : 'Guesthouses & Stays'}</p><h3>LombokStays</h3><p>${answers.budget === 'premium' ? 'Curated private villas and luxury resorts across Lombok and the Gili Islands.' : answers.budget === 'mid' ? 'Handpicked boutique hotels and comfortable stays matched to your itinerary.' : 'The best budget guesthouses and local stays across every region of Lombok.'}</p><span class="ecosystem-card-btn">${answers.party === 'couple' ? 'Find Romantic Stays →' : answers.party === 'family' ? 'Find Family Stays →' : answers.party === 'friends' ? 'Find Group Stays →' : 'Browse Stays →'}</span></a>`;
 
-    ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/post/best-beaches-lombok" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Beach Guide</p><h3>Lombok Beaches</h3><p>Every beach on the island, ranked and reviewed. Find the perfect beach for your travel style and the days in your itinerary.</p><span class="ecosystem-card-btn">Explore Beaches →</span></a>`;
+    ecoCards += `<a class="ecosystem-card" href="https://www.lombokbeaches.com" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Beach Guide</p><h3>Lombok Beaches</h3><p>Every beach on the island, ranked and reviewed. Find the perfect beach for your travel style and the days in your itinerary.</p><span class="ecosystem-card-btn">Explore Beaches →</span></a>`;
 
     if (ecoCards) {
       document.getElementById('ecosystemSection').innerHTML = `<h2>Plan &amp; Book Your Trip</h2><div class="ecosystem-grid">${ecoCards}</div>`;
