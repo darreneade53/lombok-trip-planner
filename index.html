@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lombok Trip Planner – Discover Lombok</title>
+<title>Lombok Trip Planner | Discover Lombok</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -656,7 +656,7 @@
   <div class="planner-header">
     <p class="planner-eyebrow">Discover Lombok &nbsp;/&nbsp; Plan Your Trip</p>
     <h1>Your Personal <em>Lombok</em> Itinerary</h1>
-    <p>Answer five quick questions and our AI planner builds a personalised day-by-day itinerary matched exactly to how you want to travel, complete with accommodation, experiences, and booking links.</p>
+    <p>Answer five quick questions and get a day by day itinerary matched to how you want to travel, complete with where to stay, what to do, and where to book.</p>
   </div>
 
   <div class="progress-wrap" id="progressWrap">
@@ -683,7 +683,7 @@
   <!-- Q1 -->
   <div class="question-screen active" id="q1">
     <p class="question-label">Question 1 of 5</p>
-    <h2 class="question-title">What kind of traveller are you?</h2>
+    <h2 class="question-title">What kind of traveler are you?</h2>
     <p class="question-sub">Choose the experience that excites you most.</p>
     <div class="options-grid">
       <button class="option-btn" onclick="selectOption('style','surf',this)">
@@ -753,7 +753,7 @@
   <!-- Q3 -->
   <div class="question-screen" id="q3">
     <p class="question-label">Question 3 of 5</p>
-    <h2 class="question-title">Who are you travelling with?</h2>
+    <h2 class="question-title">Who are you traveling with?</h2>
     <p class="question-sub">We'll tailor the pace and experience recommendations accordingly.</p>
     <div class="options-grid">
       <button class="option-btn" onclick="selectOption('party','solo',this)">
@@ -801,8 +801,8 @@
       </button>
       <button class="option-btn" onclick="selectOption('arrival','already',this)">
         <span class="option-icon">📍</span>
-        <div class="option-title">Already on Lombok</div>
-        <div class="option-desc">Based in Kuta — planning what to explore next</div>
+        <div class="option-title">Already in Kuta</div>
+        <div class="option-desc">Settled in and planning what to explore next</div>
       </button>
     </div>
     <div class="question-nav">
@@ -824,7 +824,7 @@
       </button>
       <button class="option-btn" onclick="selectOption('budget','mid',this)">
         <span class="option-icon">🏨</span>
-        <div class="option-title">Mid-Range</div>
+        <div class="option-title">Mid Range</div>
         <div class="option-desc">Comfortable hotels and a mix of dining</div>
       </button>
       <button class="option-btn" onclick="selectOption('budget','premium',this)">
@@ -843,9 +843,9 @@
   <div class="loading-screen" id="loadingScreen">
     <div class="loading-spinner"></div>
     <h2 class="loading-title">Building your itinerary</h2>
-    <p class="loading-sub">Personalising your Lombok experience</p>
+    <p class="loading-sub">Tailoring your Lombok trip</p>
     <div class="loading-steps">
-      <p class="loading-step" id="ls1">Analysing your travel style</p>
+      <p class="loading-step" id="ls1">Reading your travel style</p>
       <p class="loading-step" id="ls2">Selecting the best beaches and regions</p>
       <p class="loading-step" id="ls3">Planning your day by day route</p>
       <p class="loading-step" id="ls4">Matching accommodation and experiences</p>
@@ -856,7 +856,7 @@
   <!-- RESULTS -->
   <div class="results-screen" id="resultsScreen">
     <div class="results-header">
-      <p class="results-eyebrow">Your Personalised Itinerary</p>
+      <p class="results-eyebrow">Your Lombok Itinerary</p>
       <h2 class="results-title" id="itineraryTitle">Loading...</h2>
       <div class="results-summary-tags" id="summaryTags"></div>
     </div>
@@ -925,15 +925,15 @@
     });
 
     const styleMap = {
-      surf: 'surfing and coastal exploration, including surf breaks at Gerupuk, Mawi, Ekas, and Selong Belanak',
-      snorkel: 'snorkelling, freediving, and marine life encounters at the Gili Islands, Pink Beach, and Gili Kondo',
+      surf: 'surfing and coastal exploration, including Selong Belanak and Lancing for beginners, Gerupuk (reached by boat from the village) for all levels, and Mawi, Are Guling and Ekas Bay for intermediate to advanced surfers',
+      snorkel: 'snorkeling, freediving, and marine life at the Gili Islands, the Secret Gilis off the southwest peninsula, Pink Beach 1, Gili Petelu, and Gili Kondo',
       culture: 'cultural immersion, hiking, rice terrace walks in Tetebatu, Rinjani trekking, Sasak village visits, and waterfall hikes',
       relax: 'relaxation, beautiful beaches, sunset watching, and slow travel across Lombok\'s finest bays',
-      mix: 'a balanced mix of surfing, snorkelling, cultural experiences, hiking, and beach relaxation'
+      mix: 'a balanced mix of surfing, snorkeling, cultural experiences, hiking, and beach relaxation'
     };
 
     const partyMap = {
-      solo: 'a solo traveller who values flexibility, social scenes, and authentic local experiences',
+      solo: 'a solo traveler who values flexibility, social scenes, and authentic local experiences',
       couple: 'a couple seeking romance, beautiful sunsets, intimate beaches, and shared adventures',
       friends: 'a group of friends looking for variety, social atmosphere, surf, and island hopping',
       family: 'a family with children requiring safe swimming beaches, easy activities, and comfortable logistics'
@@ -941,29 +941,53 @@
 
     const arrivalMap = {
       bali: 'arriving from Bali, either by fast boat to the Gili Islands or by short flight to Lombok International Airport (LOP). Day 1 should include the journey from Bali and settling into their base.',
-      flight: 'flying direct into Lombok International Airport (LOP) near Praya in central-south Lombok. Day 1 should include airport arrival, transfer to their base (approximately 25 minutes to Kuta Lombok), and an easy first afternoon.',
-      already: 'ALREADY BASED IN KUTA LOMBOK. They are already on the island and settled. DO NOT include any arrival day, airport transfers, flights, or journey to Lombok. Day 1 starts immediately in Kuta Lombok with a full day of activities — treat them as locals who are ready to explore from the moment they wake up.'
+      flight: 'flying direct into Lombok International Airport (LOP) near Praya in central south Lombok. Day 1 should include airport arrival, transfer to their base (approximately 25 minutes to Kuta Lombok), and an easy first afternoon.',
+      already: 'ALREADY BASED IN KUTA LOMBOK. They are already on the island and settled. DO NOT include any arrival day, airport transfers, flights, or journey to Lombok. Day 1 starts immediately in Kuta Lombok with a full day of activities. Treat them as locals who are ready to explore from the moment they wake up.'
     };
 
     const budgetMap = {
-      budget: 'budget-conscious travel: local guesthouses, warungs, bemos, and shared boat transfers',
-      mid: 'mid-range comfort: boutique hotels, a mix of local and western dining, private transfers where needed',
+      budget: 'budget travel: local guesthouses, warungs, scooters or shared transport, and shared boat transfers',
+      mid: 'mid range comfort: boutique hotels, a mix of local and western dining, private transfers where needed',
       premium: 'premium travel: private villas, fine dining, private boat charters, and personal drivers'
     };
 
     const alreadyOnLombokNote = answers.arrival === 'already'
-      ? '\n\nCRITICAL: This traveller is already based in Kuta Lombok. Day 1 must start with a full day of exploration from Kuta — NO airport, NO arrival logistics, NO journey to Lombok. Jump straight into the adventure.'
+      ? '\n\nCRITICAL: This traveler is already based in Kuta Lombok. Day 1 must start with a full day of exploration from Kuta. NO airport, NO arrival logistics, NO journey to Lombok. Jump straight into the adventure.'
       : '';
 
     const dayCount = parseInt(answers.length, 10);
 
-    const prompt = `You are the expert travel planner for Discover Lombok (discoverlombok.com), a premium Indonesian travel guide. Create a highly personalised ${dayCount}-day Lombok itinerary for ${partyMap[answers.party]}, focused on ${styleMap[answers.style]}, ${arrivalMap[answers.arrival]}, travelling on a ${budgetMap[answers.budget]} basis.${alreadyOnLombokNote}
+    const FACT_RULES = `LOMBOK FACTS YOU MUST FOLLOW:
+- Give all drive times from Kuta Lombok. Never use Mataram as a reference point.
+- Are Guling is a reef break for intermediate and advanced surfers only. Never suggest it for swimming or families.
+- Torok is a calm swimming and casual snorkeling bay. It is not a surf spot.
+- Tampah and Lancing are one bay: Lancing is a wave for beginner to intermediate surfers, Tampah is for swimming and relaxing.
+- Gerupuk breaks are reached by boat from Gerupuk village. Ekas Bay is on the south coast and also needs a boat.
+- Desert Point is on the remote southwestern tip, roughly 2 to 4 hours from Kuta. Only include it for experienced surfers, as its own day or overnight, never as an add on to another day.
+- Use the name Gili Pasir, never Pulau Pasir. It is a sandbar that only appears at low tide, so tell travelers to check tide times.
+- There are two pink beaches: Pink Beach 1 and Pink Beach 2. Pink Beach, Gili Petelu, Gili Pasir, Gili Kondo, Desert Point, Tetebatu and Sembalun are all long drives from Kuta. Never put two of them on the same day.
+- The main Gilis (Trawangan, Meno, Air) are reached by boat from Bangsal or Teluk Nare in the northwest, far from Kuta. Build in a full travel day when moving between the south coast and the Gilis.
+- Rinjani summit treks take two to four days. Only include one on trips of 7 days or more, and say it needs a licensed guide.
+- Only mention places from the list above or places you are certain exist on Lombok. Never invent restaurants, hotels or businesses by name.`;
+
+    const STYLE_RULES = `WRITING RULES:
+- Use American spelling (traveler, color, harbor, snorkeling, personalized).
+- Never use em dashes or en dashes. Use commas or periods instead.
+- Never join words with hyphens to make a descriptive phrase (write "easy for beginners", not "beginner-friendly"; "very good", not "world-class").
+- Never mention AI, artificial intelligence, or that this itinerary was generated. Write as a local guide would.
+- Plain, warm, specific sentences. No hype words like "paradise", "hidden gem" or "breathtaking".`;
+
+    const prompt = `You are the expert travel planner for Discover Lombok (discoverlombok.com), a premium Indonesian travel guide. Create a ${dayCount} day Lombok itinerary for ${partyMap[answers.party]}, focused on ${styleMap[answers.style]}, ${arrivalMap[answers.arrival]}, traveling on a ${budgetMap[answers.budget]} basis.${alreadyOnLombokNote}
+
+${FACT_RULES}
+
+${STYLE_RULES}
 
 CRITICAL LENGTH RULE: The itinerary must contain EXACTLY ${dayCount} days, numbered Day 1 through Day ${dayCount}. Do not write more days, do not write fewer days, do not stop early, do not continue past Day ${dayCount} under any circumstances.
 
 Use EXACTLY these section markers in your response:
 
-ITINERARY_NAME: [Creative evocative name, e.g. "The Seven-Day Surf and Soul Loop"]
+ITINERARY_NAME: [Short evocative name, e.g. "The Surf and Soul Loop"]
 
 SUMMARY_TAGS: [Exactly 5 tags separated by | matching: trip length, main style, party type, budget, main regions]
 
@@ -972,7 +996,7 @@ Repeat this block for EVERY day, from Day 1 to Day ${dayCount}, and then STOP:
 DAY_START
 DAY_NUMBER: Day [N]
 DAY_TITLE: [Short evocative title for the day]
-DAY_CONTENT: [2-3 sentences. Be SPECIFIC to Lombok. Name real beaches, villages, and regions: Tanjung Aan, Kuta Lombok, Selong Belanak, Mawun Beach, Areguling, Gerupuk, Mawi, Ekas Bay, Senggigi, Malimbu Hill, Pura Batu Bolong, Tetebatu, Sembalun Valley, Gili Trawangan, Gili Meno, Gili Air, Gili Kondo, Pink Beach, Desert Point, Sade Village, Sukarara, Narmada, Benang Kelambu, Tiu Kelep waterfalls as appropriate to the travel style.]
+DAY_CONTENT: [2-3 sentences. Be SPECIFIC to Lombok. Name real beaches, villages, and regions as appropriate to the travel style: Tanjung Aan, Kuta Lombok, Selong Belanak, Mawun Beach, Are Guling, Gerupuk, Mawi, Tampah and Lancing, Torok, Ekas Bay, Senggigi, Nipah, Malimbu Hill, Pura Batu Bolong, Tetebatu, Sembalun Valley, Gili Trawangan, Gili Meno, Gili Air, the Secret Gilis, Gili Kondo, Pink Beach 1, Pink Beach 2, Gili Pasir, Desert Point, Sade Village, Sukarara, Narmada, Benang Kelambu, Tiu Kelep waterfalls.]
 DAY_TAGS: [3-4 activity tags separated by |]
 DAY_END
 
@@ -983,7 +1007,7 @@ ACCOMMODATION_TITLE: Where to Stay
 ACCOMMODATION_CONTENT: [2-3 sentences with specific area recommendations matching budget and style. Mention LombokStays (lombokstays.com) as the place to search and book accommodation across the island.]
 
 FOOD_TITLE: Eating Well on Lombok
-FOOD_CONTENT: [2 sentences on the food experience relevant to this itinerary. Mention local Sasak cuisine, warungs, seafood, and reference Lombok Cuisine (lombokcuisine.com) as the guide to the island's best food experiences.]
+FOOD_CONTENT: [2 sentences on the food experience relevant to this itinerary. Mention local Sasak cuisine, warungs, and seafood. Do not name any website.]
 
 TIPS_TITLE: Local Tips for This Trip
 TIPS_CONTENT: [2-3 specific insider tips directly relevant to this exact itinerary and travel style]
@@ -1058,7 +1082,7 @@ Be specific, warm, and authoritative. No generic travel advice. Every recommenda
     let ecoCards = '';
 
     if (answers.style === 'surf' || answers.style === 'mix') {
-      ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/post/where-to-surf-in-lombok" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Surf Guide</p><h3>Surfing in Lombok</h3><p>The complete guide to every break on the island, from beginner-friendly Selong Belanak to the world-class barrel at Desert Point.</p><span class="ecosystem-card-btn">Explore Surf Guide →</span></a>`;
+      ecoCards += `<a class="ecosystem-card" href="https://www.discoverlombok.com/post/where-to-surf-in-lombok" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Surf Guide</p><h3>Surfing in Lombok</h3><p>The complete guide to every break on the island, from the easy waves at Selong Belanak to the famous barrel at Desert Point.</p><span class="ecosystem-card-btn">Explore Surf Guide →</span></a>`;
     }
 
     if (answers.style === 'snorkel' || answers.style === 'mix' || answers.style === 'relax') {
@@ -1071,7 +1095,7 @@ Be specific, warm, and authoritative. No generic travel advice. Every recommenda
 
     ecoCards += `<a class="ecosystem-card" href="https://www.lombokstays.com" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">${answers.budget === 'premium' ? 'Villas & Resorts' : answers.budget === 'mid' ? 'Boutique Hotels' : 'Guesthouses & Stays'}</p><h3>LombokStays</h3><p>${answers.budget === 'premium' ? 'Curated private villas and luxury resorts across Lombok and the Gili Islands.' : answers.budget === 'mid' ? 'Handpicked boutique hotels and comfortable stays matched to your itinerary.' : 'The best budget guesthouses and local stays across every region of Lombok.'}</p><span class="ecosystem-card-btn">${answers.party === 'couple' ? 'Find Romantic Stays →' : answers.party === 'family' ? 'Find Family Stays →' : answers.party === 'friends' ? 'Find Group Stays →' : 'Browse Stays →'}</span></a>`;
 
-    ecoCards += `<a class="ecosystem-card" href="https://www.lombokbeaches.com" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Beach Guide</p><h3>Lombok Beaches</h3><p>Every beach on the island, ranked and reviewed. Find the perfect beach for your travel style and the days in your itinerary.</p><span class="ecosystem-card-btn">Explore Beaches →</span></a>`;
+    ecoCards += `<a class="ecosystem-card" href="https://www.lombokbeaches.com" target="_blank" rel="noopener"><p class="ecosystem-card-eyebrow">Beach Guide</p><h3>Lombok Beaches</h3><p>Lombok's beaches, coast by coast, with honest notes on swimming, surf, access and facilities. Find the right beach for each day of your trip.</p><span class="ecosystem-card-btn">Explore Beaches →</span></a>`;
 
     if (ecoCards) {
       document.getElementById('ecosystemSection').innerHTML = `<h2>Plan &amp; Book Your Trip</h2><div class="ecosystem-grid">${ecoCards}</div>`;
@@ -1096,7 +1120,7 @@ Be specific, warm, and authoritative. No generic travel advice. Every recommenda
       const c = card.querySelector('.day-body p').innerText;
       text += `${num}: ${t}\n${c}\n\n`;
     });
-    text += `Plan your own Lombok itinerary free at https://www.discoverlombok.com`;
+    text += `Plan your own Lombok itinerary free at https://plan.discoverlombok.com`;
     return text;
   }
 
